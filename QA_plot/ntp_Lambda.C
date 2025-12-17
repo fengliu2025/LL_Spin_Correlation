@@ -80,9 +80,9 @@ void ntp_Lambda::Loop()
    h1D_p1_phi  ->Write();
    h1D_p1_eta  ->Write();
   
-   h1D_p1_pt   ->Write();
-   h1D_p1_phi  ->Write();
-   h1D_p1_eta  ->Write();
+   h1D_p2_pt   ->Write();
+   h1D_p2_phi  ->Write();
+   h1D_p2_eta  ->Write();
 
    //pair 
    h1D_pair_phi  ->Write();
