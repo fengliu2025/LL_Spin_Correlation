@@ -10,7 +10,7 @@ void main_QA(){
 	if (!filelist.is_open()) {
 		std::cerr <<"can't open the file" <<std::endl;
 	}
-	std::string directory="";
+	std::string directory="/star/u/jjiastar/pwg/Spin/production/output/";
 	std::string line;
 	while (std::getline(filelist,line)){
 		InputFiles.push_back(directory+line);
