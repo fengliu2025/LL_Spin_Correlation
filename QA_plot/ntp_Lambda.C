@@ -10,11 +10,11 @@ void ntp_Lambda::Loop()
    TH1D * h1D_NLambda = new TH1D("h1D_NLambda","h1D_NLambda" ,5,0.5,5.5);
    //daughter particle 1
    TH1D * h1D_p1_pt   = new TH1D("h1D_p1_pt"  ,"h1D_p1_pt"   ,200,0,20 );
-   TH1D * h1D_p1_phi  = new TH1D("h1D_p1_phi" ,"h1D_p1_phi"  ,200,0,20 );
+   TH1D * h1D_p1_phi  = new TH1D("h1D_p1_phi" ,"h1D_p1_phi"  ,200,-2*TMath::Pi(),2*TMath::Pi() );
    TH1D * h1D_p1_eta  = new TH1D("h1D_p1_eta" ,"h1D_p1_eta"  ,100,-5,5);
    //daughter particle 2 
    TH1D * h1D_p2_pt   = new TH1D("h1D_p2_pt"  ,"h1D_p2_pt"   ,200,0,20 );
-   TH1D * h1D_p2_phi  = new TH1D("h1D_p2_phi" ,"h1D_p2_phi"  ,200,0,20 );
+   TH1D * h1D_p2_phi  = new TH1D("h1D_p2_phi" ,"h1D_p2_phi"  ,200,-2*TMath::Pi(),-2*TMath::Pi());
    TH1D * h1D_p2_eta  = new TH1D("h1D_p2_eta" ,"h1D_p2_eta"  ,100,-5,5);
 
    //pair 
