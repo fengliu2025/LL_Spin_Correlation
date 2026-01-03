@@ -82,6 +82,12 @@ void ntp_Lambda_Analyzer::Analysis_MassSpectrum(){
 				if( v.Pt() < Lambda_Pt_lowCut  || v.Pt() > Lambda_Pt_highCut || TMath::Abs( v.Rapidity() ) > Lambda_Rapidity_Cut ) {isGoodEvent=0;break;} 
 
 			}
+			if(Reader->p1_InEventID[0] == Reader->p1_InEventID[1] || 
+			   Reader->p1_InEventID[0] == Reader->p2_InEventID[0] || 
+			   Reader->p1_InEventID[0] == Reader->p2_InEventID[1] || 
+			   Reader->p1_InEventID[1] == Reader->p2_InEventID[0] || 
+			   Reader->p1_InEventID[1] == Reader->p2_InEventID[1] ||
+			   Reader->p2_InEventID[0] == Reader->p2_InEventID[1] ) continue;
 			if( isGoodEvent ==0 ) continue;
 
 			//Fill Histograms of QA plot;

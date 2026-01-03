@@ -83,7 +83,7 @@ ntp_Lambda_Histogram::ntp_Lambda_Histogram(ntp_Lambda_Reader *reader,std::string
 }
 
 void ntp_Lambda_Histogram::InitHistogram(){
-	h1D_TrigId	   = new TH1D("h1D_TrigId","h1D_TrigId",5,0.5,5.5);
+	h1D_TrigId	   = new TH1D("h1D_TrigId","h1D_TrigId",6,0.5,6.5);
 	h1D_NTrig      = new TH1D("h1D_NTrig" ,"h1D_NTrig" ,6,0.5,6.5);
 
 	h1D_p1_Pt      = new TH1D("h1D_p1_Pt","h1D_p1_Pt",100,0,10);
