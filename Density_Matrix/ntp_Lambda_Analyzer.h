@@ -259,6 +259,7 @@ void ntp_Lambda_Analyzer::FindCounterparts(std::vector<TLorentzVector> *Lambda_c
 
 		//-------------------------------Enter i_event loop----------------------------
 		for(Long64_t i_event=0;i_event<N_Events;i_event++){
+			//if(i_event%10000==0)std::cout<<"i_event"<<i_event<<std::endl;
 			MixEvent_Reader->fChain->GetEntry(i_event);
 			//------------------------Make some selections on the events-----------------------------
 			if(MixEvent_Reader->NLambda!=1) continue;
@@ -304,7 +305,8 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 	unsigned long N_Inputfiles_SE = SameEvent_Reader->InputFiles.size();
 	//-------------------------------Enter i_file loop---------------------------------
 	for(unsigned i_file = 0 ;i_file < N_Inputfiles_SE ;i_file++){
-		if(i_file%100==0) std::cout<<"i_file="<<i_file<<std::endl;
+		//if(i_file%1==0) std::cout<<"i_file="<<i_file<<std::endl;
+		std::cout<<"i_file="<<i_file<<std::endl;
 		TFile *fin= TFile::Open(SameEvent_Reader->InputFiles[i_file].c_str(),"READ");
 		if(fin==0){
 			std::cout<<"Can not open the file:"<< SameEvent_Reader->InputFiles[i_file] <<", Skip this" << std::endl;
@@ -320,10 +322,10 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 		Long64_t N_Events=SameEvent_Reader->fChain->GetEntries();
 		//---------------------------Ener i_event loop----------------------------
 		for(Long64_t i_event=0;i_event< N_Events;i_event++){
-		 std::cout<<"i_event="<<i_event<<std::endl;
-		SameEvent_Reader->fChain->GetEntry(i_event);
-		//------------------------Make some selections on the events-----------------------------
-		if(SameEvent_Reader->NLambda!=2) continue;// current we only select on two-Lambdas Events, will extend to multi-lambda events 
+			if(i_event%10000==0)std::cout<<"i_event"<<i_event<<std::endl;
+			SameEvent_Reader->fChain->GetEntry(i_event);
+			//------------------------Make some selections on the events-----------------------------
+			if(SameEvent_Reader->NLambda!=2) continue;// current we only select on two-Lambdas Events, will extend to multi-lambda events 
 			if(SameEvent_Reader->pair_charge[0] == 1 || SameEvent_Reader->pair_charge[1] == 1 ) continue;
 			int isGoodEvent = 1;
 			for(int i_lambda = 0; i_lambda<SameEvent_Reader->NLambda;i_lambda++){

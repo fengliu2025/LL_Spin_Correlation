@@ -5,7 +5,8 @@
 #include "ntp_Lambda_Calculator.h"
 #include "ntp_Lambda_Histogram.h"
 #include "ntp_Lambda_Reader.h"
-void main_Analysis(){
+//void main_Analysis(){
+int main(){
 	std::vector<std::string> FullInputFiles;
 	std::vector<std::string> SameEventInputFiles;
 	std::string OutputFile="Density_Matrix_ME.root";
@@ -19,11 +20,11 @@ void main_Analysis(){
 	
 	while (std::getline(filelist,line)){
 		FullInputFiles.push_back(directory+line);
-		//SameEventInputFiles.push_back(directory+line);
+		SameEventInputFiles.push_back(directory+line);
 	}
 	
 	//FullInputFiles.push_back("25130036_0.root.picoLambdaAnaMaker.root");
-	SameEventInputFiles.push_back("25130036_0.root.picoLambdaAnaMaker.root");
+	//SameEventInputFiles.push_back("25130036_0.root.picoLambdaAnaMaker.root");
 
 	ntp_Lambda_Reader *mySameEventReader  = new ntp_Lambda_Reader(SameEventInputFiles);
 	ntp_Lambda_Reader *myMixEventReader   = new ntp_Lambda_Reader(FullInputFiles);
@@ -39,5 +40,5 @@ void main_Analysis(){
     myAnalyzer->Analysis_MixEvent();
 	myHistogram->WriteAll();
 
-
+	return 0;
 }
