@@ -8,7 +8,7 @@
 void main_Analysis(){
 	std::vector<std::string> FullInputFiles;
 	std::vector<std::string> SameEventInputFiles;
-	std::string OutputFile="Density_Matrix.root";
+	std::string OutputFile="Density_Matrix_ME.root";
 	
 	std::ifstream filelist("Inputfilelist.txt");
 	if (!filelist.is_open()) {
@@ -19,11 +19,11 @@ void main_Analysis(){
 	
 	while (std::getline(filelist,line)){
 		FullInputFiles.push_back(directory+line);
-		SameEventInputFiles.push_back(directory+line);
+		//SameEventInputFiles.push_back(directory+line);
 	}
 	
 	//FullInputFiles.push_back("25130036_0.root.picoLambdaAnaMaker.root");
-	//SameEventInputFiles.push_back("25130036_0.root.picoLambdaAnaMaker.root");
+	SameEventInputFiles.push_back("25130036_0.root.picoLambdaAnaMaker.root");
 
 	ntp_Lambda_Reader *mySameEventReader  = new ntp_Lambda_Reader(SameEventInputFiles);
 	ntp_Lambda_Reader *myMixEventReader   = new ntp_Lambda_Reader(FullInputFiles);
@@ -35,8 +35,8 @@ void main_Analysis(){
 
     ntp_Lambda_Analyzer *myAnalyzer       = new ntp_Lambda_Analyzer(mySameEventReader, myMixEventReader, myCalculator, myHistogram );
 
-    myAnalyzer->Analysis_SameEvent();
-    //myAnalyzer->Analysis_MixEvent();
+    //myAnalyzer->Analysis_SameEvent();
+    myAnalyzer->Analysis_MixEvent();
 	myHistogram->WriteAll();
 
 
