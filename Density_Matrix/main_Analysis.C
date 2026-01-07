@@ -35,8 +35,8 @@ void main_Analysis(){
 
     ntp_Lambda_Analyzer *myAnalyzer       = new ntp_Lambda_Analyzer(mySameEventReader, myMixEventReader, myCalculator, myHistogram );
 
-    myAnalyzer->Analysis_SameEvent();
-    //myAnalyzer->Analysis_MixEvent();
+    //myAnalyzer->Analysis_SameEvent();
+    myAnalyzer->Analysis_MixEvent();
 	myHistogram->WriteAll();
 
 
