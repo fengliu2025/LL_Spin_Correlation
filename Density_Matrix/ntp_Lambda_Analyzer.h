@@ -320,9 +320,10 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 		Long64_t N_Events=SameEvent_Reader->fChain->GetEntries();
 		//---------------------------Ener i_event loop----------------------------
 		for(Long64_t i_event=0;i_event< N_Events;i_event++){
-			SameEvent_Reader->fChain->GetEntry(i_event);
-			//------------------------Make some selections on the events-----------------------------
-			if(SameEvent_Reader->NLambda!=2) continue;// current we only select on two-Lambdas Events, will extend to multi-lambda events 
+		 std::cout<<"i_event="<<i_event<<std::endl;
+		SameEvent_Reader->fChain->GetEntry(i_event);
+		//------------------------Make some selections on the events-----------------------------
+		if(SameEvent_Reader->NLambda!=2) continue;// current we only select on two-Lambdas Events, will extend to multi-lambda events 
 			if(SameEvent_Reader->pair_charge[0] == 1 || SameEvent_Reader->pair_charge[1] == 1 ) continue;
 			int isGoodEvent = 1;
 			for(int i_lambda = 0; i_lambda<SameEvent_Reader->NLambda;i_lambda++){
