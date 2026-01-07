@@ -13,5 +13,5 @@ request_disk   = 2GB
 
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
-transfer_input_files = /star/u/fliu5/LL_Spin_Correlation/Density_Matrix
+transfer_input_files = /star/u/fliu5/LL_Spin_Correlation/Density_Matrix/Inputfilelist.txt
 queue 1221

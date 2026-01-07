@@ -1,0 +1,6 @@
+can't open the file
+
+ *** Break *** segmentation violation
+ 0x00000000004037ac in main + 0x32c from /home/condor/local/sdcc/execute/dir_13143/condor_exec.exe
+ 0x00002b7cb9d83b35 in __libc_start_main + 0xf5 from /lib64/libc.so.6
+ 0x0000000000403c08 in <unknown> from /home/condor/local/sdcc/execute/dir_13143/condor_exec.exe
