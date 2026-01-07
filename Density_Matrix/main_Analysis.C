@@ -6,10 +6,16 @@
 #include "ntp_Lambda_Histogram.h"
 #include "ntp_Lambda_Reader.h"
 //void main_Analysis(){
-int main(){
+int main(int argc, char* argv[]){
+	if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <number>\n";
+        return 1;
+    }
+	int i_file = std::stoi(argv[1]);  
 	std::vector<std::string> FullInputFiles;
+	std::vector<std::string> MixEventInputFiles
 	std::vector<std::string> SameEventInputFiles;
-	std::string OutputFile="Density_Matrix_ME.root";
+	std::string OutputFile=Form("/star/u/fliu5/LL_Spin_Correlation/result/Density_Matrix_ME_%d.root",i_file);
 	
 	std::ifstream filelist("Inputfilelist.txt");
 	if (!filelist.is_open()) {
@@ -20,14 +26,13 @@ int main(){
 	
 	while (std::getline(filelist,line)){
 		FullInputFiles.push_back(directory+line);
-		SameEventInputFiles.push_back(directory+line);
 	}
 	
-	//FullInputFiles.push_back("25130036_0.root.picoLambdaAnaMaker.root");
-	//SameEventInputFiles.push_back("25130036_0.root.picoLambdaAnaMaker.root");
+	MixEventInputFiles.push_back(FullInputFiles[i_file]);
+	SameEventInputFiles.push_back(FullInputFiles[i_file]);
 
 	ntp_Lambda_Reader *mySameEventReader  = new ntp_Lambda_Reader(SameEventInputFiles);
-	ntp_Lambda_Reader *myMixEventReader   = new ntp_Lambda_Reader(FullInputFiles);
+	ntp_Lambda_Reader *myMixEventReader   = new ntp_Lambda_Reader(MixEventInputFiles);
 
 	ntp_Lambda_Calculator *myCalculator   = new ntp_Lambda_Calculator();
 	ntp_Lambda_Histogram *myHistogram     = new ntp_Lambda_Histogram(mySameEventReader,myCalculator,OutputFile);

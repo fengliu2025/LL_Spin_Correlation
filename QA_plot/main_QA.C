@@ -18,8 +18,8 @@ void main_QA(){
 	}
 
 	//Create the ntp_Lambda class 
-	ntp_Lambda t = ntp_Lambda(InputFiles,OutputFile);
-	t.Loop();
-
+	//ntp_Lambda t = ntp_Lambda(InputFiles,OutputFile);
+	//t.Loop();
+	std::cout<<InputFiles.size()<<std::endl;
 
 }
