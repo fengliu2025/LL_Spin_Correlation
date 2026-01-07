@@ -120,6 +120,7 @@ void ntp_Lambda_Analyzer::Analysis_SameEvent(){
 	//-------------------------------Enter i_file loop---------------------------------
 	for(unsigned long i_file = 0 ; i_file < N_Inputfiles_SE ; i_file ++){
 		//Open the file 
+		if(i_file%100==0) std::cout<<"i_file="<<i_file<<std::endl;
 		TFile *fin=TFile::Open( SameEvent_Reader->InputFiles[i_file].c_str() ,"READ");
 		if(fin==0){
 			std::cout<<"Can not open the file:"<< SameEvent_Reader->InputFiles[i_file] <<", Skip this" << std::endl;
@@ -302,6 +303,7 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 	unsigned long N_Inputfiles_SE = SameEvent_Reader->InputFiles.size();
 	//-------------------------------Enter i_file loop---------------------------------
 	for(unsigned i_file = 0 ;i_file < N_Inputfiles_SE ;i_file++){
+		if(i_file%100==0) std::cout<<"i_file="<<i_file<<std::endl;
 		TFile *fin= TFile::Open(SameEvent_Reader->InputFiles[i_file].c_str(),"READ");
 		if(fin==0){
 			std::cout<<"Can not open the file:"<< SameEvent_Reader->InputFiles[i_file] <<", Skip this" << std::endl;
