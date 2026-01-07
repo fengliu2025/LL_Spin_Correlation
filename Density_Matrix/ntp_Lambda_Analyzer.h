@@ -267,7 +267,7 @@ void ntp_Lambda_Analyzer::FindCounterparts(std::vector<TLorentzVector> *Lambda_c
 			if(MixEvent_Reader->p1_ch[0]!=p1Charge) continue;
 
 			if( TMath::Abs(MixEvent_Reader->pair_pt[0] - pt  ) > ptDiffLim ) continue;
-			if( TMath::ACos(MixEvent_Reader->pair_phi[0]-phi ) > phiDiffLim ) continue;
+			if( TMath::ACos(TMath::Cos(MixEvent_Reader->pair_phi[0]-phi) ) > phiDiffLim ) continue;
 
 			//cut on the tracks 
 			if( TMath::Abs(MixEvent_Reader->p1_eta[0]) > Track_Eta_Cut || TMath::Abs(MixEvent_Reader->p2_eta[0]) > Track_Eta_Cut ) continue;
@@ -399,8 +399,8 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 			std::vector<TLorentzVector> Lambda2_counterpart;
 			std::vector<TLorentzVector> proton2_counterpart;
 			std::vector<TLorentzVector> pion2_counterpart;
-			FindCounterparts(&Lambda2_counterpart,&proton2_counterpart,&pion2_counterpart,Lambda2.Pt(),Lambda2.Rapidity(),Lambda2.Phi(),SameEvent_Reader->p1_ch[id_Lambda1],i_file );
-			FindCounterparts(&Lambda1_counterpart,&proton1_counterpart,&pion1_counterpart,Lambda1.Pt(),Lambda1.Rapidity(),Lambda1.Phi(),SameEvent_Reader->p1_ch[id_Lambda2],i_file );
+			FindCounterparts(&Lambda2_counterpart,&proton2_counterpart,&pion2_counterpart,Lambda2.Pt(),Lambda2.Rapidity(),Lambda2.Phi(),SameEvent_Reader->p1_ch[id_Lambda2],i_file );
+			FindCounterparts(&Lambda1_counterpart,&proton1_counterpart,&pion1_counterpart,Lambda1.Pt(),Lambda1.Rapidity(),Lambda1.Phi(),SameEvent_Reader->p1_ch[id_Lambda1],i_file );
 
 			for(int i_lambda = 0; i_lambda < Lambda2_counterpart.size();i_lambda++){
 				//Fill the pair plots 
