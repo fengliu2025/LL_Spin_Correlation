@@ -36,7 +36,7 @@ public:
 	int Pair_Type_Classifier(int idx1, int idx2);
 	int Range_Type_Classifier(TLorentzVector *v1, TLorentzVector *v2);
 	void Analysis_SameEvent();
-	void FindCounterparts(std::vector<TLorentzVector> *Lambda_counterpart,std::vector<TLorentzVector> *proton_counterpart,std::vector<TLorentzVector> *pion_counterpart,double pt, double rapidity, double phi, int p1Charge);
+	void FindCounterparts(std::vector<TLorentzVector> *Lambda_counterpart,std::vector<TLorentzVector> *proton_counterpart,std::vector<TLorentzVector> *pion_counterpart,double pt, double rapidity, double phi, int p1Charge,int I_FILE);
 	void Analysis_MixEvent();
 
 
@@ -237,11 +237,12 @@ void ntp_Lambda_Analyzer::Analysis_SameEvent(){
 
 
 
-void ntp_Lambda_Analyzer::FindCounterparts(std::vector<TLorentzVector> *Lambda_counterpart,std::vector<TLorentzVector> *proton_counterpart,std::vector<TLorentzVector> *pion_counterpart,double pt, double rapidity, double phi, int p1Charge){
+void ntp_Lambda_Analyzer::FindCounterparts(std::vector<TLorentzVector> *Lambda_counterpart,std::vector<TLorentzVector> *proton_counterpart,std::vector<TLorentzVector> *pion_counterpart,double pt, double rapidity, double phi, int p1Charge,int I_FILE){
 	//Start looping over all inputfiles of Mix_Event_Reader
 	unsigned long N_Inputfiles_ME = MixEvent_Reader->InputFiles.size();
 	//--------------------------------Enter i_file loop------------------------------
 	for(unsigned i_file =0;i_file < N_Inputfiles_ME ; i_file++){
+		if(i_file!=I_FILE) continue;
 		TFile *fin=TFile::Open(MixEvent_Reader->InputFiles[i_file].c_str(),"READ");
 		if(fin==0){
 			std::cout<<"Can not open the file:"<< SameEvent_Reader->InputFiles[i_file] <<", Skip this" << std::endl;
@@ -395,8 +396,8 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 			std::vector<TLorentzVector> Lambda2_counterpart;
 			std::vector<TLorentzVector> proton2_counterpart;
 			std::vector<TLorentzVector> pion2_counterpart;
-			FindCounterparts(&Lambda2_counterpart,&proton2_counterpart,&pion2_counterpart,Lambda2.Pt(),Lambda2.Rapidity(),Lambda2.Phi(),SameEvent_Reader->p1_ch[id_Lambda1] );
-			FindCounterparts(&Lambda1_counterpart,&proton1_counterpart,&pion1_counterpart,Lambda1.Pt(),Lambda1.Rapidity(),Lambda1.Phi(),SameEvent_Reader->p1_ch[id_Lambda2] );
+			FindCounterparts(&Lambda2_counterpart,&proton2_counterpart,&pion2_counterpart,Lambda2.Pt(),Lambda2.Rapidity(),Lambda2.Phi(),SameEvent_Reader->p1_ch[id_Lambda1],i_file );
+			FindCounterparts(&Lambda1_counterpart,&proton1_counterpart,&pion1_counterpart,Lambda1.Pt(),Lambda1.Rapidity(),Lambda1.Phi(),SameEvent_Reader->p1_ch[id_Lambda2],i_file );
 
 			for(int i_lambda = 0; i_lambda < Lambda2_counterpart.size();i_lambda++){
 				//Fill the pair plots 
