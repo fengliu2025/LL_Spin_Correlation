@@ -9,7 +9,7 @@ void main_Analysis_SE(){
 	std::vector<std::string> FullInputFiles;
 	std::vector<std::string> MixEventInputFiles;
 	std::vector<std::string> SameEventInputFiles;
-	std::string OutputFile=Form("/star/u/fliu5/LL_Spin_Correlation/result/Density_Matrix_SE_%2f.root",1.5);
+	std::string OutputFile=Form("/star/u/fliu5/LL_Spin_Correlation/Density_Matrix/Density_Matrix_SE_%2f.root",1.5);
 	
 	std::ifstream filelist("Inputfilelist.txt");
 	if (!filelist.is_open()) {
