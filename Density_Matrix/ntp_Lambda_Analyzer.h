@@ -427,7 +427,7 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 
 			for(int i_lambda = 0; i_lambda<SameEvent_Reader->NLambda;i_lambda++){
 				int isGoodLambda = 1; //1 is good lambda, 0 is not good lambad 
-				if( SameEvent_Reader->pair_charge[i_lambda] == 1 ){ isGoodLambda ==0; }
+				if( SameEvent_Reader->pair_charge[i_lambda] == 1 ){ isGoodLambda =0; }
 				if( SameEvent_Reader->p1_pt[i_lambda] < Track_Pt_LowCut || SameEvent_Reader->p2_pt[i_lambda] < Track_Pt_LowCut ) {isGoodLambda=0;}
 				if( TMath::Abs(SameEvent_Reader->p1_eta[i_lambda]) > Track_Eta_Cut || TMath::Abs(SameEvent_Reader->p2_eta[i_lambda]) > Track_Eta_Cut  ) {isGoodLambda=0;}
 				
