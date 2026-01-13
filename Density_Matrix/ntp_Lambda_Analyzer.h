@@ -35,8 +35,10 @@ public:
 
 	int Pair_Type_Classifier(int idx1, int idx2);
 	int Range_Type_Classifier(TLorentzVector *v1, TLorentzVector *v2);
+	int Analyze_SEPair(int i_lambda,int j_lambda);
 	void Analysis_SameEvent();
 	void FindCounterparts(std::vector<TLorentzVector> *Lambda_counterpart,std::vector<TLorentzVector> *proton_counterpart,std::vector<TLorentzVector> *pion_counterpart,double pt, double rapidity, double phi, int p1Charge,int I_FILE);
+	int Analyze_MEPair(int i_lambda,int j_lambda);
 	void Analysis_MixEvent();
 
 
@@ -108,7 +110,67 @@ int ntp_Lambda_Analyzer::Range_Type_Classifier(TLorentzVector *v1, TLorentzVecto
 }
 
 
+int ntp_Lambda_Analyzer::Analyze_SEPair(int i_lambda,int j_lambda){
+		if( SameEvent_Reader->p1_InEventID[i_lambda] == SameEvent_Reader->p1_InEventID[j_lambda] || 
+	   		SameEvent_Reader->p1_InEventID[i_lambda] == SameEvent_Reader->p2_InEventID[j_lambda] || 
+	   		SameEvent_Reader->p1_InEventID[i_lambda] == SameEvent_Reader->p2_InEventID[j_lambda] || 
+	   		SameEvent_Reader->p1_InEventID[j_lambda] == SameEvent_Reader->p2_InEventID[i_lambda] || 
+	   		SameEvent_Reader->p1_InEventID[j_lambda] == SameEvent_Reader->p2_InEventID[j_lambda] ||
+	   		SameEvent_Reader->p2_InEventID[i_lambda] == SameEvent_Reader->p2_InEventID[j_lambda] ) return 0;
+				
+			
 
+		//---------------------------Pair Type Classification-------------------------------
+		int Pair_Type = 0 ; 
+		int id_Lambda1= i_lambda ; 
+		int id_Lambda2= j_lambda ;
+
+
+		Pair_Type = Pair_Type_Classifier(i_lambda,j_lambda);
+
+		if(Pair_Type == 1){
+			id_Lambda1 = i_lambda;id_Lambda2 = j_lambda;
+		}
+
+		else if(Pair_Type == -1){
+			id_Lambda1 = j_lambda;id_Lambda2 = i_lambda;
+		}
+
+		else if(Pair_Type == 2){
+			id_Lambda1 = i_lambda;id_Lambda2 = j_lambda;
+		}
+		else if(Pair_Type == 3){
+			id_Lambda1 = i_lambda;id_Lambda2 = j_lambda;
+		}
+		else{
+			continue;
+			std::cout<<"Something went wrong with the pair type classifier"<<std::endl;
+		}
+			
+		//---------------------------Create Same-Event Pairs-------------------------------
+		TLorentzVector Lambda1; Lambda1.SetPtEtaPhiM( SameEvent_Reader->pair_pt[id_Lambda1], SameEvent_Reader->pair_eta[id_Lambda1], SameEvent_Reader->pair_phi[id_Lambda1], SameEvent_Reader->pair_mass[id_Lambda1]  );
+		TLorentzVector proton1; proton1.SetPtEtaPhiM( SameEvent_Reader->p1_pt[id_Lambda1]  , SameEvent_Reader->p1_eta[id_Lambda1]  , SameEvent_Reader->p1_phi[id_Lambda1]  , MASS_PROTON                              );
+		TLorentzVector pion1  ;   pion1.SetPtEtaPhiM( SameEvent_Reader->p2_pt[id_Lambda1]  , SameEvent_Reader->p2_eta[id_Lambda1]  , SameEvent_Reader->p2_phi[id_Lambda1]  , MASS_PION                                );
+
+		TLorentzVector Lambda2; Lambda2.SetPtEtaPhiM( SameEvent_Reader->pair_pt[id_Lambda2], SameEvent_Reader->pair_eta[id_Lambda2], SameEvent_Reader->pair_phi[id_Lambda2], SameEvent_Reader->pair_mass[id_Lambda2]  );
+		TLorentzVector proton2; proton2.SetPtEtaPhiM( SameEvent_Reader->p1_pt[id_Lambda2]  , SameEvent_Reader->p1_eta[id_Lambda2]  , SameEvent_Reader->p1_phi[id_Lambda2]  , MASS_PROTON                              );
+		TLorentzVector pion2;     pion2.SetPtEtaPhiM( SameEvent_Reader->p2_pt[id_Lambda2]  , SameEvent_Reader->p2_eta[id_Lambda2]  , SameEvent_Reader->p2_phi[id_Lambda2]  , MASS_PION                                );
+
+
+		//---------------------------Range Type Classification-------------------------------
+		int Range_Type  = Range_Type_Classifier(&Lambda1,&Lambda2);
+			
+		//Fill the pair plots 
+		Histogramer->Fill_PairPlots(&Lambda1,&Lambda2,TMath::Abs(Pair_Type)-1,Range_Type);
+
+		//Calculate the Density Matrix
+		Calculator->Reset(&Lambda1,&proton1,&pion1,&Lambda2,&proton2,&pion2);
+		Calculator->Calculation();
+
+		//Fill Density Matrix Histgrams 
+		Histogramer->Fill_DensityMatrix(TMath::Abs(Pair_Type)-1,Range_Type);
+		return 1;
+}
 
 
 
@@ -143,84 +205,36 @@ void ntp_Lambda_Analyzer::Analysis_SameEvent(){
 			
 			
 			//------------------------Make some selections on the events-----------------------------
-			if(SameEvent_Reader->NLambda!=2) continue; // current we only select on two-Lambdas Events 
+			if(SameEvent_Reader->NLambda==1) continue; // current we only select on multi-Lambdas Events 
 			if(SameEvent_Reader->pair_charge[0] ==1 || SameEvent_Reader->pair_charge[1] ==1 ) continue; // if any one of the pair is background, pass the event. 
-			int isGoodEvent = 1; //1 is good event, 0 is not good event 
+			std::vector<int> GoodLambdaFlag;
+			
 			for(int i_lambda = 0; i_lambda<SameEvent_Reader->NLambda;i_lambda++){
+				int isGoodLambda = 1; //1 is good lambda, 0 is not good lambad 
+				//To judge if this lambda is US.
+				if( SameEvent_Reader->pair_charge[i_lambda]==1 ){isGoodLambda = 0;}//
 				//cut on the track
-				if( SameEvent_Reader->p1_pt[i_lambda] < Track_Pt_LowCut || SameEvent_Reader->p2_pt[i_lambda] < Track_Pt_LowCut ) {isGoodEvent=0;break;}
-				if( TMath::Abs(SameEvent_Reader->p1_eta[i_lambda]) > Track_Eta_Cut || TMath::Abs(SameEvent_Reader->p2_eta[i_lambda]) > Track_Eta_Cut  ) {isGoodEvent=0;break;}
+				if( SameEvent_Reader->p1_pt[i_lambda] < Track_Pt_LowCut || SameEvent_Reader->p2_pt[i_lambda] < Track_Pt_LowCut ) {isGoodLambda=0;}
+				if( TMath::Abs(SameEvent_Reader->p1_eta[i_lambda]) > Track_Eta_Cut || TMath::Abs(SameEvent_Reader->p2_eta[i_lambda]) > Track_Eta_Cut  ) {isGoodLambda=0;}
 				
 				TLorentzVector v;
 				v.SetPtEtaPhiM(SameEvent_Reader->pair_pt[i_lambda],SameEvent_Reader->pair_eta[i_lambda],SameEvent_Reader->pair_phi[i_lambda],SameEvent_Reader->pair_mass[i_lambda]);
 				//cut on the lambda_Candidates 
-				if( v.Pt() < Lambda_Pt_lowCut || v.Pt() > Lambda_Pt_highCut || TMath::Abs( v.Rapidity() )  > Lambda_Rapidity_Cut ){isGoodEvent=0;break;}
-				if( v.M()  < Lambda_mass_lowCut || v.M() > Lambda_mass_highCut ) {isGoodEvent=0;break;}
-			}
+				if( v.Pt() < Lambda_Pt_lowCut || v.Pt() > Lambda_Pt_highCut || TMath::Abs( v.Rapidity() )  > Lambda_Rapidity_Cut ){isGoodLambda=0;}
+				if( v.M()  < Lambda_mass_lowCut || v.M() > Lambda_mass_highCut ) {isGoodLambda=0;}
 
-			if(isGoodEvent==0) continue;
-			if(SameEvent_Reader->p1_InEventID[0] == SameEvent_Reader->p1_InEventID[1] || 
-			   SameEvent_Reader->p1_InEventID[0] == SameEvent_Reader->p2_InEventID[0] || 
-			   SameEvent_Reader->p1_InEventID[0] == SameEvent_Reader->p2_InEventID[1] || 
-			   SameEvent_Reader->p1_InEventID[1] == SameEvent_Reader->p2_InEventID[0] || 
-			   SameEvent_Reader->p1_InEventID[1] == SameEvent_Reader->p2_InEventID[1] ||
-			   SameEvent_Reader->p2_InEventID[0] == SameEvent_Reader->p2_InEventID[1] ) continue;
-				
+				GoodLambdaFlag.push_back(isGoodLambda);
+			}
 			//Fill Histograms of QA plot;
-			Histogramer->Fill_QAplots();
+			Histogramer->Fill_QAplots(GoodLambdaFlag);//Notice that here, if two Lambda Candiates share some tracks, both Lambdas will be filled inthe QAplots.
 
-			//---------------------------Event Type Classification-------------------------------
-			int Pair_Type = 0 ; 
-			int id_Lambda1= 0 ; 
-			int id_Lambda2= 1 ;
-
-			//Event_flag = 0: Lambda + Lambda_bar 
-			//Event_flag = 1: Lambda + Lambda
-			//Event_flag = 2: Lambda_bar + Lambda_bar 
-
-			Pair_Type = Pair_Type_Classifier(0,1);
-
-			if(Pair_Type == 1){
-				id_Lambda1 = 0;id_Lambda2 = 1;
+			for(int i_lambda=0;i_lambda < SameEvent_Reader->NLambda;i_lambda++){
+				if( GoodLambdaFlag[i_lambda] == 0 ) continue;
+				for(int j_lambda=i_lambda+1;j_lambda < SameEvent_Reader->NLambda;j_lambda++){
+					if( GoodLambdaFlag[j_lambda] == 0 ) continue;
+					Analyze_PairSE(i_lambda,j_lambda);
+				}
 			}
-
-			else if(Pair_Type == -1){
-				id_Lambda1 = 1;id_Lambda2 = 0;
-			}
-
-			else if(Pair_Type == 2){
-				id_Lambda1 = 0;id_Lambda2 = 1;
-			}
-			else if(Pair_Type == 3){
-				id_Lambda1 = 0;id_Lambda2 = 1;
-			}
-			else{
-				continue;
-				std::cout<<"Something went wrong with the pair type classifier"<<std::endl;
-			}
-			
-			//---------------------------Create Same-Event Pairs-------------------------------
-			TLorentzVector Lambda1; Lambda1.SetPtEtaPhiM( SameEvent_Reader->pair_pt[id_Lambda1], SameEvent_Reader->pair_eta[id_Lambda1], SameEvent_Reader->pair_phi[id_Lambda1], SameEvent_Reader->pair_mass[id_Lambda1]  );
-			TLorentzVector proton1; proton1.SetPtEtaPhiM( SameEvent_Reader->p1_pt[id_Lambda1]  , SameEvent_Reader->p1_eta[id_Lambda1]  , SameEvent_Reader->p1_phi[id_Lambda1]  , MASS_PROTON                              );
-			TLorentzVector pion1  ;   pion1.SetPtEtaPhiM( SameEvent_Reader->p2_pt[id_Lambda1]  , SameEvent_Reader->p2_eta[id_Lambda1]  , SameEvent_Reader->p2_phi[id_Lambda1]  , MASS_PION                                );
-
-			TLorentzVector Lambda2; Lambda2.SetPtEtaPhiM( SameEvent_Reader->pair_pt[id_Lambda2], SameEvent_Reader->pair_eta[id_Lambda2], SameEvent_Reader->pair_phi[id_Lambda2], SameEvent_Reader->pair_mass[id_Lambda2]  );
-			TLorentzVector proton2; proton2.SetPtEtaPhiM( SameEvent_Reader->p1_pt[id_Lambda2]  , SameEvent_Reader->p1_eta[id_Lambda2]  , SameEvent_Reader->p1_phi[id_Lambda2]  , MASS_PROTON                              );
-			TLorentzVector pion2;     pion2.SetPtEtaPhiM( SameEvent_Reader->p2_pt[id_Lambda2]  , SameEvent_Reader->p2_eta[id_Lambda2]  , SameEvent_Reader->p2_phi[id_Lambda2]  , MASS_PION                                );
-
-
-			//---------------------------Range Type Classification-------------------------------
-			int Range_Type  = Range_Type_Classifier(&Lambda1,&Lambda2);
-			
-			//Fill the pair plots 
-			Histogramer->Fill_PairPlots(&Lambda1,&Lambda2,TMath::Abs(Pair_Type)-1,Range_Type);
-
-			//Calculate the Density Matrix
-			Calculator->Reset(&Lambda1,&proton1,&pion1,&Lambda2,&proton2,&pion2);
-			Calculator->Calculation();
-
-			//Fill Density Matrix Histgrams 
-			Histogramer->Fill_DensityMatrix(TMath::Abs(Pair_Type)-1,Range_Type);
 
 
 
@@ -300,6 +314,88 @@ void ntp_Lambda_Analyzer::FindCounterparts(std::vector<TLorentzVector> *Lambda_c
 
 }
 
+int ntp_Lambda_Analyzer::Analyze_MEPair(int i_lambda,int j_lambda){
+		if(SameEvent_Reader->p1_InEventID[i_lambda] == SameEvent_Reader->p1_InEventID[j_lambda] || 
+		   SameEvent_Reader->p1_InEventID[i_lambda] == SameEvent_Reader->p2_InEventID[i_lambda] || 
+		   SameEvent_Reader->p1_InEventID[i_lambda] == SameEvent_Reader->p2_InEventID[j_lambda] || 
+		   SameEvent_Reader->p1_InEventID[j_lambda] == SameEvent_Reader->p2_InEventID[i_lambda] || 
+		   SameEvent_Reader->p1_InEventID[j_lambda] == SameEvent_Reader->p2_InEventID[j_lambda] ||
+		   SameEvent_Reader->p2_InEventID[i_lambda] == SameEvent_Reader->p2_InEventID[j_lambda] ) return 0;
+
+			
+
+		//---------------------------Event Type Classification-------------------------------
+		int Pair_Type = 0 ; 
+		int id_Lambda1= i_lambda ; 
+		int id_Lambda2= j_lambda ;
+
+		
+
+		Pair_Type = Pair_Type_Classifier(0,1);
+
+		if(Pair_Type == 1){
+			id_Lambda1 = i_lambda;id_Lambda2 = j_lambda;
+		}
+
+		else if(Pair_Type == -1){
+			id_Lambda1 = j_lambda;id_Lambda2 = i_lambda;
+		}
+
+		else if(Pair_Type == 2){
+			id_Lambda1 = i_lambda;id_Lambda2 = j_lambda;
+		}
+		else if(Pair_Type == 3){
+			id_Lambda1 = i_lambda;id_Lambda2 = j_lambda;
+		}
+		else{
+			continue;
+			std::cout<<"Something went wrong with the pair type classifier"<<std::endl;
+		}
+			
+		//---------------------------Create Same-Event Pairs-------------------------------
+		TLorentzVector Lambda1; Lambda1.SetPtEtaPhiM( SameEvent_Reader->pair_pt[id_Lambda1], SameEvent_Reader->pair_eta[id_Lambda1], SameEvent_Reader->pair_phi[id_Lambda1], SameEvent_Reader->pair_mass[id_Lambda1]  );
+		TLorentzVector proton1; proton1.SetPtEtaPhiM( SameEvent_Reader->p1_pt[id_Lambda1]  , SameEvent_Reader->p1_eta[id_Lambda1]  , SameEvent_Reader->p1_phi[id_Lambda1]  , MASS_PROTON                              );
+		TLorentzVector pion1  ;   pion1.SetPtEtaPhiM( SameEvent_Reader->p2_pt[id_Lambda1]  , SameEvent_Reader->p2_eta[id_Lambda1]  , SameEvent_Reader->p2_phi[id_Lambda1]  , MASS_PION                                );
+
+		TLorentzVector Lambda2; Lambda2.SetPtEtaPhiM( SameEvent_Reader->pair_pt[id_Lambda2], SameEvent_Reader->pair_eta[id_Lambda2], SameEvent_Reader->pair_phi[id_Lambda2], SameEvent_Reader->pair_mass[id_Lambda2]  );
+		TLorentzVector proton2; proton2.SetPtEtaPhiM( SameEvent_Reader->p1_pt[id_Lambda2]  , SameEvent_Reader->p1_eta[id_Lambda2]  , SameEvent_Reader->p1_phi[id_Lambda2]  , MASS_PROTON                              );
+		TLorentzVector pion2;     pion2.SetPtEtaPhiM( SameEvent_Reader->p2_pt[id_Lambda2]  , SameEvent_Reader->p2_eta[id_Lambda2]  , SameEvent_Reader->p2_phi[id_Lambda2]  , MASS_PION                                );
+		//---------------------------Range Type Classification-------------------------------
+		int Range_Type  = Range_Type_Classifier(&Lambda1,&Lambda2);
+
+		//----------------------------Create Mixed-Event Pairs-------------------------------
+		std::vector<TLorentzVector> Lambda1_counterpart;
+		std::vector<TLorentzVector> proton1_counterpart;
+		std::vector<TLorentzVector> pion1_counterpart;
+		std::vector<TLorentzVector> Lambda2_counterpart;
+		std::vector<TLorentzVector> proton2_counterpart;
+		std::vector<TLorentzVector> pion2_counterpart;
+		FindCounterparts(&Lambda2_counterpart,&proton2_counterpart,&pion2_counterpart,Lambda2.Pt(),Lambda2.Rapidity(),Lambda2.Phi(),SameEvent_Reader->p1_ch[id_Lambda2],i_file );
+		FindCounterparts(&Lambda1_counterpart,&proton1_counterpart,&pion1_counterpart,Lambda1.Pt(),Lambda1.Rapidity(),Lambda1.Phi(),SameEvent_Reader->p1_ch[id_Lambda1],i_file );
+
+		for(int k_lambda = 0; k_lambda < Lambda2_counterpart.size();k_lambda++){
+			//Fill the pair plots 
+			Histogramer->Fill_PairPlots(&Lambda1,&Lambda2_counterpart[k_lambda],TMath::Abs(Pair_Type)-1,Range_Type, 0.5/Lambda2_counterpart.size() );
+			//Calculate the Density Matrix
+			Calculator->Reset(&Lambda1,&proton1,&pion1,&Lambda2_counterpart[k_lambda],&proton2_counterpart[k_lambda],&pion2_counterpart[k_lambda]);
+			Calculator->Calculation();
+			Histogramer->Fill_DensityMatrix(TMath::Abs(Pair_Type)-1,Range_Type,0.5/Lambda2_counterpart.size() );
+		}
+
+		for(int k_lambda = 0; k_lambda < Lambda1_counterpart.size();k_lambda++){
+			//Fill the pair plots 
+			Histogramer->Fill_PairPlots(&Lambda1_counterpart[k_lambda],&Lambda2,TMath::Abs(Pair_Type)-1,Range_Type, 0.5/Lambda1_counterpart.size() );
+			//Calculate the Density Matrix
+			Calculator->Reset(&Lambda1_counterpart[k_lambda],&proton1_counterpart[k_lambda],&pion1_counterpart[k_lambda],&Lambda2,&proton2,&pion2);
+			Calculator->Calculation();
+			Histogramer->Fill_DensityMatrix(TMath::Abs(Pair_Type)-1,Range_Type,0.5/Lambda1_counterpart.size() );
+		}
+		return 1;
+
+}
+
+
+
 void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 	//Start looping over all inputfiles of Same_Event_Reader 
 	unsigned long N_Inputfiles_SE = SameEvent_Reader->InputFiles.size();
@@ -325,99 +421,33 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 			if(i_event%10000==0)std::cout<<"i_event"<<i_event<<std::endl;
 			SameEvent_Reader->fChain->GetEntry(i_event);
 			//------------------------Make some selections on the events-----------------------------
-			if(SameEvent_Reader->NLambda!=2) continue;// current we only select on two-Lambdas Events, will extend to multi-lambda events 
-			if(SameEvent_Reader->pair_charge[0] == 1 || SameEvent_Reader->pair_charge[1] == 1 ) continue;
+			if(SameEvent_Reader->NLambda==1) continue;// current we only select on multi-Lambdas Events
 			int isGoodEvent = 1;
+			std::vector<int> GoodLambdaFlag;
+
 			for(int i_lambda = 0; i_lambda<SameEvent_Reader->NLambda;i_lambda++){
-				if( SameEvent_Reader->p1_pt[i_lambda] < Track_Pt_LowCut || SameEvent_Reader->p2_pt[i_lambda] < Track_Pt_LowCut ) {isGoodEvent=0;break;}
-				if( TMath::Abs(SameEvent_Reader->p1_eta[i_lambda]) > Track_Eta_Cut || TMath::Abs(SameEvent_Reader->p2_eta[i_lambda]) > Track_Eta_Cut  ) {isGoodEvent=0;break;}
+				int isGoodLambda = 1; //1 is good lambda, 0 is not good lambad 
+				if( SameEvent_Reader->pair_charge[i_lambda] == 1 ){ isGoodLambda ==0; }
+				if( SameEvent_Reader->p1_pt[i_lambda] < Track_Pt_LowCut || SameEvent_Reader->p2_pt[i_lambda] < Track_Pt_LowCut ) {isGoodLambda=0;}
+				if( TMath::Abs(SameEvent_Reader->p1_eta[i_lambda]) > Track_Eta_Cut || TMath::Abs(SameEvent_Reader->p2_eta[i_lambda]) > Track_Eta_Cut  ) {isGoodLambda=0;}
 				
 				TLorentzVector v;
 				v.SetPtEtaPhiM(SameEvent_Reader->pair_pt[i_lambda],SameEvent_Reader->pair_eta[i_lambda],SameEvent_Reader->pair_phi[i_lambda],SameEvent_Reader->pair_mass[i_lambda]);
 				//cut on the lambda_Candidates 
-				if( v.Pt() < Lambda_Pt_lowCut || v.Pt() > Lambda_Pt_highCut || TMath::Abs( v.Rapidity() )  > Lambda_Rapidity_Cut ){isGoodEvent=0;break;}
-				if( v.M()  < Lambda_mass_lowCut || v.M() > Lambda_mass_highCut ) {isGoodEvent=0;break;}
+				if( v.Pt() < Lambda_Pt_lowCut || v.Pt() > Lambda_Pt_highCut || TMath::Abs( v.Rapidity() )  > Lambda_Rapidity_Cut ){isGoodLambda=0;}
+				if( v.M()  < Lambda_mass_lowCut || v.M() > Lambda_mass_highCut ) {isGoodLambda=0;}
 			}
-
-			if(isGoodEvent ==0 ) continue;
-
-			if(SameEvent_Reader->p1_InEventID[0] == SameEvent_Reader->p1_InEventID[1] || 
-			   SameEvent_Reader->p1_InEventID[0] == SameEvent_Reader->p2_InEventID[0] || 
-			   SameEvent_Reader->p1_InEventID[0] == SameEvent_Reader->p2_InEventID[1] || 
-			   SameEvent_Reader->p1_InEventID[1] == SameEvent_Reader->p2_InEventID[0] || 
-			   SameEvent_Reader->p1_InEventID[1] == SameEvent_Reader->p2_InEventID[1] ||
-			   SameEvent_Reader->p2_InEventID[0] == SameEvent_Reader->p2_InEventID[1] ) continue;
 
 			//Fill Histograms of QA plot;
-			Histogramer->Fill_QAplots();
+			Histogramer->Fill_QAplots(GoodLambdaFlag);
 
-			//---------------------------Event Type Classification-------------------------------
-			int Pair_Type = 0 ; 
-			int id_Lambda1= 0 ; 
-			int id_Lambda2= 1 ;
 
-			//Event_flag = 0: Lambda + Lambda_bar 
-			//Event_flag = 1: Lambda + Lambda
-			//Event_flag = 2: Lambda_bar + Lambda_bar 
-
-			Pair_Type = Pair_Type_Classifier(0,1);
-
-			if(Pair_Type == 1){
-				id_Lambda1 = 0;id_Lambda2 = 1;
-			}
-
-			else if(Pair_Type == -1){
-				id_Lambda1 = 1;id_Lambda2 = 0;
-			}
-
-			else if(Pair_Type == 2){
-				id_Lambda1 = 0;id_Lambda2 = 1;
-			}
-			else if(Pair_Type == 3){
-				id_Lambda1 = 0;id_Lambda2 = 1;
-			}
-			else{
-				continue;
-				std::cout<<"Something went wrong with the pair type classifier"<<std::endl;
-			}
-			
-			//---------------------------Create Same-Event Pairs-------------------------------
-			TLorentzVector Lambda1; Lambda1.SetPtEtaPhiM( SameEvent_Reader->pair_pt[id_Lambda1], SameEvent_Reader->pair_eta[id_Lambda1], SameEvent_Reader->pair_phi[id_Lambda1], SameEvent_Reader->pair_mass[id_Lambda1]  );
-			TLorentzVector proton1; proton1.SetPtEtaPhiM( SameEvent_Reader->p1_pt[id_Lambda1]  , SameEvent_Reader->p1_eta[id_Lambda1]  , SameEvent_Reader->p1_phi[id_Lambda1]  , MASS_PROTON                              );
-			TLorentzVector pion1  ;   pion1.SetPtEtaPhiM( SameEvent_Reader->p2_pt[id_Lambda1]  , SameEvent_Reader->p2_eta[id_Lambda1]  , SameEvent_Reader->p2_phi[id_Lambda1]  , MASS_PION                                );
-
-			TLorentzVector Lambda2; Lambda2.SetPtEtaPhiM( SameEvent_Reader->pair_pt[id_Lambda2], SameEvent_Reader->pair_eta[id_Lambda2], SameEvent_Reader->pair_phi[id_Lambda2], SameEvent_Reader->pair_mass[id_Lambda2]  );
-			TLorentzVector proton2; proton2.SetPtEtaPhiM( SameEvent_Reader->p1_pt[id_Lambda2]  , SameEvent_Reader->p1_eta[id_Lambda2]  , SameEvent_Reader->p1_phi[id_Lambda2]  , MASS_PROTON                              );
-			TLorentzVector pion2;     pion2.SetPtEtaPhiM( SameEvent_Reader->p2_pt[id_Lambda2]  , SameEvent_Reader->p2_eta[id_Lambda2]  , SameEvent_Reader->p2_phi[id_Lambda2]  , MASS_PION                                );
-			//---------------------------Range Type Classification-------------------------------
-			int Range_Type  = Range_Type_Classifier(&Lambda1,&Lambda2);
-
-			//----------------------------Create Mixed-Event Pairs-------------------------------
-			std::vector<TLorentzVector> Lambda1_counterpart;
-			std::vector<TLorentzVector> proton1_counterpart;
-			std::vector<TLorentzVector> pion1_counterpart;
-			std::vector<TLorentzVector> Lambda2_counterpart;
-			std::vector<TLorentzVector> proton2_counterpart;
-			std::vector<TLorentzVector> pion2_counterpart;
-			FindCounterparts(&Lambda2_counterpart,&proton2_counterpart,&pion2_counterpart,Lambda2.Pt(),Lambda2.Rapidity(),Lambda2.Phi(),SameEvent_Reader->p1_ch[id_Lambda2],i_file );
-			FindCounterparts(&Lambda1_counterpart,&proton1_counterpart,&pion1_counterpart,Lambda1.Pt(),Lambda1.Rapidity(),Lambda1.Phi(),SameEvent_Reader->p1_ch[id_Lambda1],i_file );
-
-			for(int i_lambda = 0; i_lambda < Lambda2_counterpart.size();i_lambda++){
-				//Fill the pair plots 
-				Histogramer->Fill_PairPlots(&Lambda1,&Lambda2_counterpart[i_lambda],TMath::Abs(Pair_Type)-1,Range_Type, 0.5/Lambda2_counterpart.size() );
-				//Calculate the Density Matrix
-				Calculator->Reset(&Lambda1,&proton1,&pion1,&Lambda2_counterpart[i_lambda],&proton2_counterpart[i_lambda],&pion2_counterpart[i_lambda]);
-				Calculator->Calculation();
-				Histogramer->Fill_DensityMatrix(TMath::Abs(Pair_Type)-1,Range_Type,0.5/Lambda2_counterpart.size() );
-			}
-
-			for(int i_lambda = 0; i_lambda < Lambda1_counterpart.size();i_lambda++){
-				//Fill the pair plots 
-				Histogramer->Fill_PairPlots(&Lambda1_counterpart[i_lambda],&Lambda2,TMath::Abs(Pair_Type)-1,Range_Type, 0.5/Lambda1_counterpart.size() );
-				//Calculate the Density Matrix
-				Calculator->Reset(&Lambda1_counterpart[i_lambda],&proton1_counterpart[i_lambda],&pion1_counterpart[i_lambda],&Lambda2,&proton2,&pion2);
-				Calculator->Calculation();
-				Histogramer->Fill_DensityMatrix(TMath::Abs(Pair_Type)-1,Range_Type,0.5/Lambda1_counterpart.size() );
+			for(int i_lambda=0;i_lambda < SameEvent_Reader->NLambda;i_lambda++){
+				if( GoodLambdaFlag[i_lambda] == 0) continue;
+				for(int j_lambda=i_lambda+1;j_lambda < SameEvent_Reader->NLambda;j_lambda++){
+					if( GoodLambdaFlag[j_lambda] == 0 ) continue;
+					Analyze_MEPair(i_lambda,j_lambda);
+				}
 			}
 
 		}

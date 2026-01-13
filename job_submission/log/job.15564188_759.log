@@ -1,0 +1,39 @@
+000 (15564188.759.000) 2026-01-07 21:29:41 Job submitted from host: <130.199.48.129:9618?addrs=130.199.48.129-9618&alias=rcas6009.rcf.bnl.gov&noUDP&sock=schedd_22421_101d>
+...
+040 (15564188.759.000) 2026-01-08 01:49:30 Started transferring input files
+	Transferring to host: <130.199.150.87:9618?addrs=130.199.150.87-9618&alias=spool1568.sdcc.bnl.gov&noUDP&sock=slot1_41_25189_cd38_196061>
+...
+040 (15564188.759.000) 2026-01-08 01:49:30 Finished transferring input files
+...
+001 (15564188.759.000) 2026-01-08 01:49:31 Job executing on host: <130.199.150.87:9618?addrs=130.199.150.87-9618&alias=spool1568.sdcc.bnl.gov&noUDP&sock=startd_25180_4069>
+...
+006 (15564188.759.000) 2026-01-08 01:49:40 Image size of job updated: 99792
+	85  -  MemoryUsage of job (MB)
+	86072  -  ResidentSetSize of job (KB)
+...
+006 (15564188.759.000) 2026-01-08 01:54:40 Image size of job updated: 447052
+	100  -  MemoryUsage of job (MB)
+	102112  -  ResidentSetSize of job (KB)
+...
+040 (15564188.759.000) 2026-01-08 01:57:05 Started transferring output files
+...
+040 (15564188.759.000) 2026-01-08 01:57:05 Finished transferring output files
+...
+005 (15564188.759.000) 2026-01-08 01:57:05 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:06:53, Sys 0 00:00:07  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:06:53, Sys 0 00:00:07  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	191  -  Run Bytes Sent By Job
+	144352  -  Run Bytes Received By Job
+	191  -  Total Bytes Sent By Job
+	144352  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     0.97        1         1 
+	   Disk (KB)            :   159     2097152   6681186 
+	   Memory (MB)          :   100        4096      4096 
+	   xferslots            :                           0 
+
+	Job terminated of its own accord at 2026-01-08T06:57:05Z with exit-code 0.
+...

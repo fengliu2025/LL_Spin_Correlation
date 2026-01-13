@@ -1,0 +1,43 @@
+000 (15564188.398.000) 2026-01-07 21:29:40 Job submitted from host: <130.199.48.129:9618?addrs=130.199.48.129-9618&alias=rcas6009.rcf.bnl.gov&noUDP&sock=schedd_22421_101d>
+...
+040 (15564188.398.000) 2026-01-08 00:57:20 Started transferring input files
+	Transferring to host: <130.199.151.3:9618?addrs=130.199.151.3-9618&alias=spool1581.sdcc.bnl.gov&noUDP&sock=slot1_36_95061_7851_188756>
+...
+040 (15564188.398.000) 2026-01-08 00:57:20 Finished transferring input files
+...
+001 (15564188.398.000) 2026-01-08 00:57:21 Job executing on host: <130.199.151.3:9618?addrs=130.199.151.3-9618&alias=spool1581.sdcc.bnl.gov&noUDP&sock=startd_95052_db87>
+...
+006 (15564188.398.000) 2026-01-08 00:57:30 Image size of job updated: 109664
+	78  -  MemoryUsage of job (MB)
+	79012  -  ResidentSetSize of job (KB)
+...
+006 (15564188.398.000) 2026-01-08 01:02:31 Image size of job updated: 451052
+	128  -  MemoryUsage of job (MB)
+	130856  -  ResidentSetSize of job (KB)
+...
+006 (15564188.398.000) 2026-01-08 01:07:32 Image size of job updated: 451052
+	128  -  MemoryUsage of job (MB)
+	130860  -  ResidentSetSize of job (KB)
+...
+040 (15564188.398.000) 2026-01-08 01:11:57 Started transferring output files
+...
+040 (15564188.398.000) 2026-01-08 01:11:57 Finished transferring output files
+...
+005 (15564188.398.000) 2026-01-08 01:11:57 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:13:09, Sys 0 00:00:12  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:13:09, Sys 0 00:00:12  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	275  -  Run Bytes Sent By Job
+	144352  -  Run Bytes Received By Job
+	275  -  Total Bytes Sent By Job
+	144352  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     0.94        1         1 
+	   Disk (KB)            :   159     2097152   6681183 
+	   Memory (MB)          :   128        4096      4096 
+	   xferslots            :                           0 
+
+	Job terminated of its own accord at 2026-01-08T06:11:57Z with exit-code 0.
+...

@@ -75,7 +75,7 @@ public :
 	ntp_Lambda_Histogram();
 	ntp_Lambda_Histogram(ntp_Lambda_Reader *reader,ntp_Lambda_Calculator *calculator,std::string outPutFile);
 	void InitHitogram();
-	void Fill_QAplots();
+	void Fill_QAplots(std::vector<int> GoodLambdaFlag);
 	void Fill_PairPlots(TLorentzVector *v1, TLorentzVector*v2,int type_bin , int range_bin);
 	void Fill_PairPlots(TLorentzVector *v1, TLorentzVector*v2,int type_bin , int range_bin,double weight);
 	void Fill_DensityMatrix(int type_bin , int range_bin);
@@ -152,8 +152,9 @@ void ntp_Lambda_Histogram::InitHitogram(){
 
 
 
-void ntp_Lambda_Histogram::Fill_QAplots(){
+void ntp_Lambda_Histogram::Fill_QAplots(std::vector<int> GoodLambdaFlag){
 	for (unsigned int i=0; i < Reader->NLambda; i ++){
+		if(GoodLambdaFlag[i]==0) continue;
 		h1D_p1_Pt   ->Fill(Reader->p1_pt[i]);
 		h1D_p1_Eta  ->Fill(Reader->p1_eta[i]);
 		h1D_p1_Phi  ->Fill(Reader->p1_phi[i]);
