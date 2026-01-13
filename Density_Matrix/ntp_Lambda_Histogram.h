@@ -250,7 +250,7 @@ void ntp_Lambda_Histogram::Fill_DensityMatrix(int type_bin , int range_bin){
 	//h1D_cos_theta_star_PairRest[Range_Bin-1][type_bin]->Fill(Calculator->cos_theta_star_PairRest);
 
 	
-};
+}
 
 void ntp_Lambda_Histogram::Fill_DensityMatrix(int type_bin , int range_bin,double weight){
 	h1D_B_a_1[range_bin][type_bin]->Fill( Calculator->B_a_1 ,weight);      //h1D_B_a_1[Range_Bin-1][type_bin]->Fill( Calculator->B_a_1 ,weight);
@@ -281,7 +281,7 @@ void ntp_Lambda_Histogram::Fill_DensityMatrix(int type_bin , int range_bin,doubl
 	//h1D_cos_theta_star_PairRest[Range_Bin-1][type_bin]->Fill(Calculator->cos_theta_star_PairRest,weight);
 
 	
-};
+}
 
 
 void ntp_Lambda_Histogram::Reset(){

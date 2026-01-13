@@ -38,7 +38,7 @@ public:
 	int Analyze_SEPair(int i_lambda,int j_lambda);
 	void Analysis_SameEvent();
 	void FindCounterparts(std::vector<TLorentzVector> *Lambda_counterpart,std::vector<TLorentzVector> *proton_counterpart,std::vector<TLorentzVector> *pion_counterpart,double pt, double rapidity, double phi, int p1Charge,int I_FILE);
-	int Analyze_MEPair(int i_lambda,int j_lambda);
+	int Analyze_MEPair(int i_lambda,int j_lambda,int i_file);
 	void Analysis_MixEvent();
 
 
@@ -232,7 +232,7 @@ void ntp_Lambda_Analyzer::Analysis_SameEvent(){
 				if( GoodLambdaFlag[i_lambda] == 0 ) continue;
 				for(int j_lambda=i_lambda+1;j_lambda < SameEvent_Reader->NLambda;j_lambda++){
 					if( GoodLambdaFlag[j_lambda] == 0 ) continue;
-					Analyze_PairSE(i_lambda,j_lambda);
+					Analyze_SEPair(i_lambda,j_lambda);
 				}
 			}
 
@@ -314,7 +314,7 @@ void ntp_Lambda_Analyzer::FindCounterparts(std::vector<TLorentzVector> *Lambda_c
 
 }
 
-int ntp_Lambda_Analyzer::Analyze_MEPair(int i_lambda,int j_lambda){
+int ntp_Lambda_Analyzer::Analyze_MEPair(int i_lambda,int j_lambda,int i_file){
 		if(SameEvent_Reader->p1_InEventID[i_lambda] == SameEvent_Reader->p1_InEventID[j_lambda] || 
 		   SameEvent_Reader->p1_InEventID[i_lambda] == SameEvent_Reader->p2_InEventID[i_lambda] || 
 		   SameEvent_Reader->p1_InEventID[i_lambda] == SameEvent_Reader->p2_InEventID[j_lambda] || 
@@ -447,7 +447,7 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 				if( GoodLambdaFlag[i_lambda] == 0) continue;
 				for(int j_lambda=i_lambda+1;j_lambda < SameEvent_Reader->NLambda;j_lambda++){
 					if( GoodLambdaFlag[j_lambda] == 0 ) continue;
-					Analyze_MEPair(i_lambda,j_lambda);
+					Analyze_MEPair(i_lambda,j_lambda,i_file);
 				}
 			}
 
