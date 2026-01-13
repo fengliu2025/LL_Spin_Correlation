@@ -143,7 +143,7 @@ int ntp_Lambda_Analyzer::Analyze_SEPair(int i_lambda,int j_lambda){
 			id_Lambda1 = i_lambda;id_Lambda2 = j_lambda;
 		}
 		else{
-			continue;
+			return 0;
 			std::cout<<"Something went wrong with the pair type classifier"<<std::endl;
 		}
 			
@@ -348,7 +348,7 @@ int ntp_Lambda_Analyzer::Analyze_MEPair(int i_lambda,int j_lambda){
 			id_Lambda1 = i_lambda;id_Lambda2 = j_lambda;
 		}
 		else{
-			continue;
+			return 0;
 			std::cout<<"Something went wrong with the pair type classifier"<<std::endl;
 		}
 			
@@ -422,7 +422,7 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 			SameEvent_Reader->fChain->GetEntry(i_event);
 			//------------------------Make some selections on the events-----------------------------
 			if(SameEvent_Reader->NLambda==1) continue;// current we only select on multi-Lambdas Events
-			int isGoodEvent = 1;
+			
 			std::vector<int> GoodLambdaFlag;
 
 			for(int i_lambda = 0; i_lambda<SameEvent_Reader->NLambda;i_lambda++){
@@ -436,6 +436,7 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 				//cut on the lambda_Candidates 
 				if( v.Pt() < Lambda_Pt_lowCut || v.Pt() > Lambda_Pt_highCut || TMath::Abs( v.Rapidity() )  > Lambda_Rapidity_Cut ){isGoodLambda=0;}
 				if( v.M()  < Lambda_mass_lowCut || v.M() > Lambda_mass_highCut ) {isGoodLambda=0;}
+				GoodLambdaFlag.push_back(isGoodLambda);
 			}
 
 			//Fill Histograms of QA plot;
