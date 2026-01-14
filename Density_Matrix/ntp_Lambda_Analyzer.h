@@ -215,7 +215,7 @@ void ntp_Lambda_Analyzer::Analysis_SameEvent(){
 			
 			//------------------------Make some selections on the events-----------------------------
 			//if(isGoodTrigger() == 0 ) continue; //select on the triggers 
-			if(SameEvent_Reader->NLambda<3) continue; // current we only select on multi-Lambdas Events 
+			//if(SameEvent_Reader->NLambda<3) continue; // current we only select on multi-Lambdas Events 
 			std::vector<int> GoodLambdaFlag;
 			//if(SameEvent_Reader->pair_charge[0] ==1 || SameEvent_Reader->pair_charge[1] ==1 ) continue;
 			for(int i_lambda = 0; i_lambda<SameEvent_Reader->NLambda;i_lambda++){
@@ -234,6 +234,11 @@ void ntp_Lambda_Analyzer::Analysis_SameEvent(){
 
 				GoodLambdaFlag.push_back(isGoodLambda);
 			}
+
+			int NGoodLambda = std::accumulate(GoodLambdaFlag.begin(), GoodLambdaFlag.end(), 0);
+			if(NGoodLambda < 2) continue;
+
+
 			//Fill Histograms of QA plot;
 			Histogramer->Fill_QAplots(GoodLambdaFlag);//Notice that here, if two Lambda Candiates share some tracks, both Lambdas will be filled inthe QAplots.
 
@@ -434,7 +439,7 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 
 			//------------------------Make some selections on the events-----------------------------
 			//if(isGoodTrigger() == 0 ) continue; //select on the triggers 
-			if(SameEvent_Reader->NLambda < 3) continue;// current we only select on multi-Lambdas Events
+			//if(SameEvent_Reader->NLambda < 3) continue;// current we only select on multi-Lambdas Events
 			
 			std::vector<int> GoodLambdaFlag;
 
@@ -451,6 +456,9 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 				if( v.M()  < Lambda_mass_lowCut || v.M() > Lambda_mass_highCut ) {isGoodLambda=0;}
 				GoodLambdaFlag.push_back(isGoodLambda);
 			}
+			
+			int NGoodLambda = std::accumulate(GoodLambdaFlag.begin(), GoodLambdaFlag.end(), 0);
+			if(NGoodLambda < 2) continue;
 
 			//Fill Histograms of QA plot;
 			Histogramer->Fill_QAplots(GoodLambdaFlag);
