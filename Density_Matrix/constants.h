@@ -4,7 +4,7 @@
 const int Range_Bin = 2; 
 //cut on the track 
 const float Track_Pt_LowCut = 0.15;
-const float Track_Eta_Cut   = 1.5;
+const float Track_Eta_Cut   = 1.0;
 
 
 //cut on the lambda 

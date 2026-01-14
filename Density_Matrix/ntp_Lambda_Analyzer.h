@@ -205,7 +205,7 @@ void ntp_Lambda_Analyzer::Analysis_SameEvent(){
 			
 			
 			//------------------------Make some selections on the events-----------------------------
-			if(SameEvent_Reader->NLambda==1) continue; // current we only select on multi-Lambdas Events 
+			if(SameEvent_Reader->NLambda!=2) continue; // current we only select on multi-Lambdas Events 
 			if(SameEvent_Reader->pair_charge[0] ==1 || SameEvent_Reader->pair_charge[1] ==1 ) continue; // if any one of the pair is background, pass the event. 
 			std::vector<int> GoodLambdaFlag;
 			
@@ -421,7 +421,7 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 			if(i_event%10000==0)std::cout<<"i_event"<<i_event<<std::endl;
 			SameEvent_Reader->fChain->GetEntry(i_event);
 			//------------------------Make some selections on the events-----------------------------
-			if(SameEvent_Reader->NLambda==1) continue;// current we only select on multi-Lambdas Events
+			if(SameEvent_Reader->NLambda!=2) continue;// current we only select on multi-Lambdas Events
 			
 			std::vector<int> GoodLambdaFlag;
 
