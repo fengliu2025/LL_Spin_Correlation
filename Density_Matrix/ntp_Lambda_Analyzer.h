@@ -35,6 +35,7 @@ public:
 
 	int Pair_Type_Classifier(int idx1, int idx2);
 	int Range_Type_Classifier(TLorentzVector *v1, TLorentzVector *v2);
+	int ntp_Lambda_Analyzer::isGoodTrigger();
 	int Analyze_SEPair(int i_lambda,int j_lambda);
 	void Analysis_SameEvent();
 	void FindCounterparts(std::vector<TLorentzVector> *Lambda_counterpart,std::vector<TLorentzVector> *proton_counterpart,std::vector<TLorentzVector> *pion_counterpart,double pt, double rapidity, double phi, int p1Charge,int I_FILE);
@@ -172,6 +173,14 @@ int ntp_Lambda_Analyzer::Analyze_SEPair(int i_lambda,int j_lambda){
 		return 1;
 }
 
+int ntp_Lambda_Analyzer::isGoodTrigger(){
+	int GoodTriggerFlag = 1;
+	for(int i=0;i < SameEvent_Reader->mNTrigs;i++){
+		if(SameEvent_Reader->mTrigId[i] == 910802 || SameEvent_Reader->mTrigId[i] == 910804 ) GoodLambdaFlag = 0; 
+	}
+	return GoodTriggerFlag;
+}
+
 
 
 
@@ -205,8 +214,8 @@ void ntp_Lambda_Analyzer::Analysis_SameEvent(){
 			
 			
 			//------------------------Make some selections on the events-----------------------------
-			if(SameEvent_Reader->NLambda!=2) continue; // current we only select on multi-Lambdas Events 
-			if(SameEvent_Reader->pair_charge[0] ==1 || SameEvent_Reader->pair_charge[1] ==1 ) continue; // if any one of the pair is background, pass the event. 
+			if(isGoodTrigger() == 0 ) continue; //select on the triggers 
+			if(SameEvent_Reader->NLambda==1) continue; // current we only select on multi-Lambdas Events 
 			std::vector<int> GoodLambdaFlag;
 			
 			for(int i_lambda = 0; i_lambda<SameEvent_Reader->NLambda;i_lambda++){
@@ -420,8 +429,12 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 		for(Long64_t i_event=0;i_event< N_Events;i_event++){
 			if(i_event%10000==0)std::cout<<"i_event"<<i_event<<std::endl;
 			SameEvent_Reader->fChain->GetEntry(i_event);
+
+
+
 			//------------------------Make some selections on the events-----------------------------
-			if(SameEvent_Reader->NLambda!=2) continue;// current we only select on multi-Lambdas Events
+			if(isGoodTrigger() == 0 ) continue; //select on the triggers 
+			if(SameEvent_Reader->NLambda==1) continue;// current we only select on multi-Lambdas Events
 			
 			std::vector<int> GoodLambdaFlag;
 
