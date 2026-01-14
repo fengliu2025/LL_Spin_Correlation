@@ -214,10 +214,10 @@ void ntp_Lambda_Analyzer::Analysis_SameEvent(){
 			
 			
 			//------------------------Make some selections on the events-----------------------------
-			if(isGoodTrigger() == 0 ) continue; //select on the triggers 
-			if(SameEvent_Reader->NLambda==1) continue; // current we only select on multi-Lambdas Events 
+			//if(isGoodTrigger() == 0 ) continue; //select on the triggers 
+			if(SameEvent_Reader->NLambda<3) continue; // current we only select on multi-Lambdas Events 
 			std::vector<int> GoodLambdaFlag;
-			
+			//if(SameEvent_Reader->pair_charge[0] ==1 || SameEvent_Reader->pair_charge[1] ==1 ) continue;
 			for(int i_lambda = 0; i_lambda<SameEvent_Reader->NLambda;i_lambda++){
 				int isGoodLambda = 1; //1 is good lambda, 0 is not good lambad 
 				//To judge if this lambda is US.
@@ -433,8 +433,8 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 
 
 			//------------------------Make some selections on the events-----------------------------
-			if(isGoodTrigger() == 0 ) continue; //select on the triggers 
-			if(SameEvent_Reader->NLambda==1) continue;// current we only select on multi-Lambdas Events
+			//if(isGoodTrigger() == 0 ) continue; //select on the triggers 
+			if(SameEvent_Reader->NLambda < 3) continue;// current we only select on multi-Lambdas Events
 			
 			std::vector<int> GoodLambdaFlag;
 
