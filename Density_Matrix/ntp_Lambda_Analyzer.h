@@ -176,7 +176,7 @@ int ntp_Lambda_Analyzer::Analyze_SEPair(int i_lambda,int j_lambda){
 int ntp_Lambda_Analyzer::isGoodTrigger(){
 	int GoodTriggerFlag = 1;
 	for(int i=0;i < SameEvent_Reader->mNTrigs;i++){
-		if(SameEvent_Reader->mTrigId[i] == 910802 || SameEvent_Reader->mTrigId[i] == 910804 ) GoodLambdaFlag = 0; 
+		if(SameEvent_Reader->mTrigId[i] == 910802 || SameEvent_Reader->mTrigId[i] == 910804 ) GoodTriggerFlag = 0; 
 	}
 	return GoodTriggerFlag;
 }
