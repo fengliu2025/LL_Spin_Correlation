@@ -72,6 +72,13 @@ public :
 	TH1D *h1D_cos_theta_star_Lab[Range_Bin][3];
 	TH1D *h1D_cos_theta_star_PairRest[Range_Bin][3];
 
+	//Trigger 
+	TH1D *h1D_Trigger;
+	TH1D *h1D_MB_Trigger;
+	TH1D *h1D_HM_Trigger;
+
+	TH1D *h1D_MB_HM_Trigger;
+
 	ntp_Lambda_Histogram();
 	ntp_Lambda_Histogram(ntp_Lambda_Reader *reader,ntp_Lambda_Calculator *calculator,std::string outPutFile);
 	void InitHitogram();
@@ -147,6 +154,13 @@ void ntp_Lambda_Histogram::InitHitogram(){
 		}
 	}
 
+	//
+	h1D_Trigger       = new TH1D("h1D_Trigger","h1D_Trigger",6,0.5,6.5);
+	h1D_MB_Trigger    = new TH1D("h1D_MB_Trigger","h1D_MB_Trigger",3,0.5,3.5);
+	h1D_HM_Trigger    = new TH1D("h1D_HM_Trigger","h1D_HM_Trigger",2,0.5,2.5);
+
+	h1D_MB_HM_Trigger = new TH1D("h1D_MB_HM_Trigger","h1D_MB_HM_Trigger",3,0.5,3.5);
+
 
 }
 
@@ -168,6 +182,24 @@ void ntp_Lambda_Histogram::Fill_QAplots(std::vector<int> GoodLambdaFlag){
 		h1D_pair_Phi->Fill(Reader->pair_phi[i]);
 		h1D_pair_Mass->Fill(Reader->pair_mass[i]);
 	}
+
+	int MB_TriggerFlag = 0;
+	int HM_TriggerFlag = 0; 
+
+
+	for(unsigned int i =0 ; i < Reader->mNTrigs;i++){
+		if( Reader->mTrigId[i] == 		910001 ){h1D_Trigger->Fill(1);h1D_MB_Trigger->Fill(1);MB_TriggerFlag=1;   }
+		else if( Reader->mTrigId[i] ==  910003 ){h1D_Trigger->Fill(2);h1D_MB_Trigger->Fill(2);MB_TriggerFlag=1;   }
+		else if( Reader->mTrigId[i] ==  910013 ){h1D_Trigger->Fill(3);h1D_MB_Trigger->Fill(3);MB_TriggerFlag=1;   }
+		else if( Reader->mTrigId[i] ==  910802 ){h1D_Trigger->Fill(4);h1D_HM_Trigger->Fill(1);HM_TriggerFlag=1;   }
+		else if( Reader->mTrigId[i] ==  910804 ){h1D_Trigger->Fill(5);h1D_HM_Trigger->Fill(2);HM_TriggerFlag=1;   }
+		else {h1D_Trigger->Fill(6);}
+	}
+
+	if(MB_TriggerFlag == 1 && HM_TriggerFlag == 1 ) h1D_MB_HM_Trigger->Fill(3);
+	if(MB_TriggerFlag == 1 && HM_TriggerFlag == 0 ) h1D_MB_HM_Trigger->Fill(1);
+	if(MB_TriggerFlag == 0 && HM_TriggerFlag == 1 ) h1D_MB_HM_Trigger->Fill(2);
+
 }
 
 
@@ -396,6 +428,12 @@ void ntp_Lambda_Histogram::WriteAll(){
 		h2D_PairMass_deltaR[i_t]->Write();
 		h1D_L1L2_PtDifference[i_t]->Write();
 	}
+	h1D_Trigger      ->Write();
+	h1D_MB_Trigger   ->Write();
+	h1D_HM_Trigger   ->Write();
+
+	h1D_MB_HM_Trigger ->Write();
+
 
 	fout->Close();
 	delete fout;
