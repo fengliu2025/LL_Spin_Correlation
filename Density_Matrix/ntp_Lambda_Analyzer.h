@@ -35,7 +35,7 @@ public:
 
 	int Pair_Type_Classifier(int idx1, int idx2);
 	int Range_Type_Classifier(TLorentzVector *v1, TLorentzVector *v2);
-	int ntp_Lambda_Analyzer::isGoodTrigger();
+	int isGoodTrigger();
 	int Analyze_SEPair(int i_lambda,int j_lambda);
 	void Analysis_SameEvent();
 	void FindCounterparts(std::vector<TLorentzVector> *Lambda_counterpart,std::vector<TLorentzVector> *proton_counterpart,std::vector<TLorentzVector> *pion_counterpart,double pt, double rapidity, double phi, int p1Charge,int I_FILE);
