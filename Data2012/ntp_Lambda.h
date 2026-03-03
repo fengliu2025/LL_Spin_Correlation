@@ -117,7 +117,7 @@ Long64_t ntp_Lambda::LoadTree(Long64_t entry)
    if (centry < 0) return centry;
    if (fChain->GetTreeNumber() != fCurrent) {
       fCurrent = fChain->GetTreeNumber();
-      Notify();
+     
    }
    return centry;
 }
@@ -167,7 +167,7 @@ void ntp_Lambda::Init(TTree *tree)
    fChain->SetBranchAddress("pair_eta", &pair_eta, &b_pair_eta);
    fChain->SetBranchAddress("pair_pt", &pair_pt, &b_pair_pt);
    fChain->SetBranchAddress("pair_mass", &pair_mass, &b_pair_mass);
-   Notify();
+   
 }
 
 
