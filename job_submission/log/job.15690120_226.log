@@ -1,0 +1,63 @@
+000 (15690120.226.000) 2026-01-20 07:35:55 Job submitted from host: <130.199.48.129:9618?addrs=130.199.48.129-9618&alias=rcas6009.rcf.bnl.gov&noUDP&sock=schedd_22421_101d>
+...
+040 (15690120.226.000) 2026-01-21 00:46:32 Started transferring input files
+	Transferring to host: <130.199.151.28:9618?addrs=130.199.151.28-9618&alias=spool1606.sdcc.bnl.gov&noUDP&sock=slot1_92_25111_33f0_245123>
+...
+040 (15690120.226.000) 2026-01-21 00:46:32 Finished transferring input files
+...
+001 (15690120.226.000) 2026-01-21 00:46:33 Job executing on host: <130.199.151.28:9618?addrs=130.199.151.28-9618&alias=spool1606.sdcc.bnl.gov&noUDP&sock=startd_25102_90cb>
+...
+006 (15690120.226.000) 2026-01-21 00:46:42 Image size of job updated: 346400
+	105  -  MemoryUsage of job (MB)
+	106520  -  ResidentSetSize of job (KB)
+...
+006 (15690120.226.000) 2026-01-21 00:51:43 Image size of job updated: 696684
+	158  -  MemoryUsage of job (MB)
+	161384  -  ResidentSetSize of job (KB)
+...
+006 (15690120.226.000) 2026-01-21 00:56:44 Image size of job updated: 696684
+	158  -  MemoryUsage of job (MB)
+	161532  -  ResidentSetSize of job (KB)
+...
+006 (15690120.226.000) 2026-01-21 01:01:44 Image size of job updated: 696684
+	158  -  MemoryUsage of job (MB)
+	161772  -  ResidentSetSize of job (KB)
+...
+006 (15690120.226.000) 2026-01-21 01:06:45 Image size of job updated: 696684
+	159  -  MemoryUsage of job (MB)
+	162340  -  ResidentSetSize of job (KB)
+...
+006 (15690120.226.000) 2026-01-21 01:36:47 Image size of job updated: 696684
+	159  -  MemoryUsage of job (MB)
+	162476  -  ResidentSetSize of job (KB)
+...
+006 (15690120.226.000) 2026-01-21 01:41:48 Image size of job updated: 696684
+	163  -  MemoryUsage of job (MB)
+	166612  -  ResidentSetSize of job (KB)
+...
+006 (15690120.226.000) 2026-01-21 01:46:48 Image size of job updated: 696684
+	164  -  MemoryUsage of job (MB)
+	167048  -  ResidentSetSize of job (KB)
+...
+040 (15690120.226.000) 2026-01-21 01:48:16 Started transferring output files
+...
+040 (15690120.226.000) 2026-01-21 01:48:16 Finished transferring output files
+...
+005 (15690120.226.000) 2026-01-21 01:48:16 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:59:40, Sys 0 00:00:49  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:59:40, Sys 0 00:00:49  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	373  -  Run Bytes Sent By Job
+	148880  -  Run Bytes Received By Job
+	373  -  Total Bytes Sent By Job
+	148880  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     1.00        1         1 
+	   Disk (KB)            :   164     2097152   6681186 
+	   Memory (MB)          :   164        4096      4096 
+	   xferslots            :                           0 
+
+	Job terminated of its own accord at 2026-01-21T06:48:16Z with exit-code 0.
+...

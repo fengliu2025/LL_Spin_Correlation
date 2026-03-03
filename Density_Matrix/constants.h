@@ -16,9 +16,9 @@ const float Lambda_mass_highCut = 1.119833;//GeV/c^2
 
 
 //MixEvent Limitation 
-const float ptDiffLim = 0.1;
-const float phiDiffLim = 0.1;
-const float rapidityDiffLim = 0.1;
+const float ptDiffLim = 0.02;
+const float phiDiffLim = 0.02;
+const float rapidityDiffLim = 0.02;
 
 //physics constants 
 double MASS_PROTON = 0.93827208816;//GeV/c^2

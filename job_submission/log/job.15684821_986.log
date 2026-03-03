@@ -1,0 +1,47 @@
+000 (15684821.986.000) 2026-01-19 15:56:22 Job submitted from host: <130.199.48.129:9618?addrs=130.199.48.129-9618&alias=rcas6009.rcf.bnl.gov&noUDP&sock=schedd_22421_101d>
+...
+040 (15684821.986.000) 2026-01-19 16:30:43 Started transferring input files
+	Transferring to host: <130.199.150.78:9618?addrs=130.199.150.78-9618&alias=spool1559.sdcc.bnl.gov&noUDP&sock=slot1_58_24669_cf59_245942>
+...
+040 (15684821.986.000) 2026-01-19 16:30:43 Finished transferring input files
+...
+001 (15684821.986.000) 2026-01-19 16:30:44 Job executing on host: <130.199.150.78:9618?addrs=130.199.150.78-9618&alias=spool1559.sdcc.bnl.gov&noUDP&sock=startd_24661_fea2>
+...
+006 (15684821.986.000) 2026-01-19 16:30:57 Image size of job updated: 422468
+	80  -  MemoryUsage of job (MB)
+	81264  -  ResidentSetSize of job (KB)
+...
+006 (15684821.986.000) 2026-01-19 16:35:58 Image size of job updated: 449396
+	119  -  MemoryUsage of job (MB)
+	121372  -  ResidentSetSize of job (KB)
+...
+006 (15684821.986.000) 2026-01-19 16:45:58 Image size of job updated: 449396
+	119  -  MemoryUsage of job (MB)
+	121376  -  ResidentSetSize of job (KB)
+...
+006 (15684821.986.000) 2026-01-19 16:50:59 Image size of job updated: 449396
+	119  -  MemoryUsage of job (MB)
+	121380  -  ResidentSetSize of job (KB)
+...
+040 (15684821.986.000) 2026-01-19 16:58:08 Started transferring output files
+...
+040 (15684821.986.000) 2026-01-19 16:58:08 Finished transferring output files
+...
+005 (15684821.986.000) 2026-01-19 16:58:09 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:26:14, Sys 0 00:00:20  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:26:14, Sys 0 00:00:20  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	247  -  Run Bytes Sent By Job
+	148880  -  Run Bytes Received By Job
+	247  -  Total Bytes Sent By Job
+	148880  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     0.99        1         1 
+	   Disk (KB)            :   163     2097152   6681170 
+	   Memory (MB)          :   119        4096      4096 
+	   xferslots            :                           0 
+
+	Job terminated of its own accord at 2026-01-19T21:58:08Z with exit-code 0.
+...

@@ -176,8 +176,8 @@ int ntp_Lambda_Analyzer::Analyze_SEPair(int i_lambda,int j_lambda){
 int ntp_Lambda_Analyzer::isGoodTrigger(){
 	int GoodTriggerFlag = 0;
 	for(int i=0;i < SameEvent_Reader->mNTrigs;i++){
-		//if(SameEvent_Reader->mTrigId[i] == 910802 || SameEvent_Reader->mTrigId[i] == 910804 ) GoodTriggerFlag = 0; 
-		if(SameEvent_Reader->mTrigId[i] == 910001 || SameEvent_Reader->mTrigId[i] == 910003 || SameEvent_Reader->mTrigId[i] == 910013) GoodTriggerFlag = 1; 
+		if(SameEvent_Reader->mTrigId[i] == 910802 || SameEvent_Reader->mTrigId[i] == 910804 ) GoodTriggerFlag = 1; 
+		//if(SameEvent_Reader->mTrigId[i] == 910001 || SameEvent_Reader->mTrigId[i] == 910003 || SameEvent_Reader->mTrigId[i] == 910013) GoodTriggerFlag = 1; 
 
 	}
 	return GoodTriggerFlag;
@@ -216,7 +216,7 @@ void ntp_Lambda_Analyzer::Analysis_SameEvent(){
 			
 			
 			//------------------------Make some selections on the events-----------------------------
-			if(isGoodTrigger() == 0 ) continue; //select on the triggers ,only events that has MB trigger
+			//if(isGoodTrigger() == 1 ) continue; //select on the triggers ,only events that has MB trigger
 			//if(SameEvent_Reader->NLambda<3) continue; // current we only select on multi-Lambdas Events 
 			std::vector<int> GoodLambdaFlag;
 			//if(SameEvent_Reader->pair_charge[0] ==1 || SameEvent_Reader->pair_charge[1] ==1 ) continue;
@@ -440,7 +440,7 @@ void ntp_Lambda_Analyzer::Analysis_MixEvent(){
 
 
 			//------------------------Make some selections on the events-----------------------------
-			if(isGoodTrigger() == 0 ) continue; //select on the triggers 
+			//if(isGoodTrigger() == 1 ) continue; //select on the triggers 
 			//if(SameEvent_Reader->NLambda < 3) continue;// current we only select on multi-Lambdas Events
 			
 			std::vector<int> GoodLambdaFlag;
