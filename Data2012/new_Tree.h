@@ -3,7 +3,7 @@
 class new_Tree{
 public:
 
-   TTree* 		  tree;	
+   TTree          *tree;	
 
    Int_t           eventId;
    Float_t         Vz;
@@ -14,32 +14,32 @@ public:
    //Float_t         high_phi[6];   //[mNTrks]
    //Float_t         high_eta[6];   //[mNTrks]
    Int_t           NLambda;
-   Int_t           p1_InEventID[5];   //[NLambda]
-   Float_t         p1_pt[5];   //[NLambda]
-   Float_t         p1_phi[5];   //[NLambda]
-   Float_t         p1_eta[5];   //[NLambda]
-   Float_t         p1_dca[5];   //[NLambda]
-   Int_t           p1_ch[5];   //[NLambda]
-   Int_t           p1_hasTOFinfo[5];   //[NLambda]
+   Int_t           p1_InEventID[1000];   //[NLambda]
+   Float_t         p1_pt[1000];   //[NLambda]
+   Float_t         p1_phi[1000];   //[NLambda]
+   Float_t         p1_eta[1000];   //[NLambda]
+   Float_t         p1_dca[1000];   //[NLambda]
+   Int_t           p1_ch[1000];   //[NLambda]
+   Int_t           p1_hasTOFinfo[1000];   //[NLambda]
   
-   Int_t           p2_InEventID[5];   //[NLambda]
-   Float_t         p2_pt[5];   //[NLambda]
-   Float_t         p2_phi[5];   //[NLambda]
-   Float_t         p2_eta[5];   //[NLambda]
-   Float_t         p2_dca[5];   //[NLambda]
-   Int_t           p2_hasTOFinfo[5];   //[NLambda]
+   Int_t           p2_InEventID[1000];   //[NLambda]
+   Float_t         p2_pt[1000];   //[NLambda]
+   Float_t         p2_phi[1000];   //[NLambda]
+   Float_t         p2_eta[1000];   //[NLambda]
+   Float_t         p2_dca[1000];   //[NLambda]
+   Int_t           p2_hasTOFinfo[1000];   //[NLambda]
   
-   Int_t           pair_charge[5];   //[NLambda]
-   Float_t         pair_DCAdaughters[5];   //[NLambda]
-   Float_t         pair_theta[5];   //[NLambda]
-   Float_t         pair_decayL[5];   //[NLambda]
-   Float_t         pair_phi[5];   //[NLambda]
-   Float_t         pair_eta[5];   //[NLambda]
-   Float_t         pair_pt[5];   //[NLambda]
-   Float_t         pair_mass[5];   //[NLambda]
+   Int_t           pair_charge[1000];   //[NLambda]
+   Float_t         pair_DCAdaughters[1000];   //[NLambda]
+   Float_t         pair_theta[1000];   //[NLambda]
+   Float_t         pair_decayL[1000];   //[NLambda]
+   Float_t         pair_phi[1000];   //[NLambda]
+   Float_t         pair_eta[1000];   //[NLambda]
+   Float_t         pair_pt[1000];   //[NLambda]
+   Float_t         pair_mass[1000];   //[NLambda]
 
    new_Tree();
-   void MakeNewTree();
+   void MakeNewTree(TTree *OutPutTree);
    void ResetTree();
    void Fill();
    void WriteTree(std::string OutPutFile);
@@ -47,13 +47,20 @@ public:
 };
 
 new_Tree::new_Tree(){
-
+tree =  0;	
 }
 
-void new_Tree::MakeNewTree(){
-	tree = new TTree("ntp_Lambda","ntp_Lambda");
-
-
+void new_Tree::MakeNewTree(TTree *OutPutTree){
+	 std::cout<<"test"<<std::endl;
+	tree = OutPutTree;
+	//tree = new TTree("ntp_Lambda_2012","2012ntp_Lambda_2012");
+	//TTree *testtree = new TTree("ntp_Lambda_2012","2012ntp_Lambda_2012");
+	//tree->Print();
+	if(!tree){
+		std::cout<<"fail to make a tree"<<std::endl;
+		return ;
+	}
+	std::cout<<"test1"<<std::endl;
 	tree->Branch("eventId", &eventId, "eventId/I");       //Int_t eventId
    tree->Branch("Vz", &Vz, "Vz/F"); //VzVzVPDmax
     
@@ -119,10 +126,10 @@ void new_Tree::Fill(){
 
 
 void new_Tree::WriteTree(std::string OutPutFile){
-	TFile *fout=TFile::Open(OutPutFile.c_str() , "RECREATE");
-	tree->Write();
-	fout->Close();
-	delete fout;
+	//TFile *fout=TFile::Open(OutPutFile.c_str() , "RECREATE");
+	//tree->Write();
+	//fout->Close();
+	//delete fout;
 
 
 }

@@ -85,8 +85,8 @@ public :
    TBranch        *b_pair_pt;   //!
    TBranch        *b_pair_mass;   //!
 
-   ntp_Lambda(TTree *tree=0);
-   virtual ~ntp_Lambda();
+   ntp_Lambda();
+   //virtual ~ntp_Lambda();
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
@@ -98,7 +98,7 @@ public :
 #ifdef ntp_Lambda_cxx
 
 
-ntp_Lambda::~ntp_Lambda()
+ntp_Lambda::ntp_Lambda()
 {
   
 }

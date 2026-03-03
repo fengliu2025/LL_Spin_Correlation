@@ -9,36 +9,43 @@ void ntp_Lambda::Loop()
    //------------------------------------------ENTER FILE LOOP-----------------------------------
    for(int ifile = 0; ifile < InPutFileList.size(); ifile ++){
          //Open the .root file 
-         TFile *fin = TFile::Open(InPutFileList[ifile].c_str(),"READ"); 
-         if(!fin){
+        //TFile *fout = new TFile(OutPutFileList[ifile].c_str(),"RECREATE");
+        //TTree *outputTree = new TTree("ntp_Lambda","ntp_Lambda");
+        TFile *fin = TFile::Open(InPutFileList[ifile].c_str(),"READ"); 
+        std::cout<<"TFIle"<<std::endl; 
+	if(!fin){
             std::cout<<"Can not opne the file:"<<InPutFileList[ifile]<<std::endl;
             std::cout<<"Skip this root file"<<std::endl;
             continue;
          }
 
          TTree *Tree = (TTree *)fin->Get("ntp_Lambda"); 
-         if(!TTree){
+         if(!Tree){
             std::cout<<"Can not open the TTree,skip this file"<<std::endl;
             continue;
          }
+	TFile *fout = new TFile(OutPutFileList[ifile].c_str(),"RECREATE");
+        TTree *outputTree = new TTree("ntp_Lambda","ntp_Lambda");
 
          //Initialize the TTree 
          Init(Tree);
          int current_eventId = -1;
          int current_Nlambda = 0;
+	std::cout<<"TTree"<<std::endl;
 
-
-         new_Tree *newTree;
-         newTree->MakeNewTree();
-         newTree->ResetTree();
-
-
+         new_Tree *newTree = new new_Tree();
+        //std::cout<<"MakeTTree"<<std::endl;
+	
+	newTree->MakeNewTree(outputTree);
+         
+	//std::cout<<"MakeTTree"<<std::endl;
+	newTree->ResetTree();
          Long64_t NEntries =  fChain->GetEntries();
          fChain->GetEntry(0);
          //-------------------------------------ENTER ENTRY LOOP--------------------------------
          for(int ientry=0; ientry < NEntries; ientry++ ){
-           
-
+          if(ientry%10000==0) cout<<"ientry="<<ientry<<std::endl;   
+	
             newTree->p1_InEventID[current_Nlambda] = p1_InEventID;
             newTree->p1_pt[current_Nlambda]        = p1_pt; 
             newTree->p1_phi[current_Nlambda]       = p1_phi;
@@ -88,10 +95,11 @@ void ntp_Lambda::Loop()
          //-------------------------------------END ENTRY LOOP--------------------------------
 
          //Write to OutPutFile 
-         fin->Close();
+        outputTree->Write(); 
+	fin->Close();
          delete fin;
-         newTree->WriteTree(OutPutFileList[ifile].c_str());
-         
+         //TFile *fout = new TFile(OutPutFileList[ifile].c_str(),"RECREATE");
+         //outputTree->Write();
 
 
    }
