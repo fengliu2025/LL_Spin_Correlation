@@ -51,16 +51,12 @@ tree =  0;
 }
 
 void new_Tree::MakeNewTree(TTree *OutPutTree){
-	 std::cout<<"test"<<std::endl;
 	tree = OutPutTree;
-	//tree = new TTree("ntp_Lambda_2012","2012ntp_Lambda_2012");
-	//TTree *testtree = new TTree("ntp_Lambda_2012","2012ntp_Lambda_2012");
-	//tree->Print();
 	if(!tree){
-		std::cout<<"fail to make a tree"<<std::endl;
+		std::cout<<"the outpull tree doesn't exist"<<std::endl;
 		return ;
 	}
-	std::cout<<"test1"<<std::endl;
+	
 	tree->Branch("eventId", &eventId, "eventId/I");       //Int_t eventId
    tree->Branch("Vz", &Vz, "Vz/F"); //VzVzVPDmax
     
@@ -126,10 +122,7 @@ void new_Tree::Fill(){
 
 
 void new_Tree::WriteTree(std::string OutPutFile){
-	//TFile *fout=TFile::Open(OutPutFile.c_str() , "RECREATE");
-	//tree->Write();
-	//fout->Close();
-	//delete fout;
+	
 
 
 }
