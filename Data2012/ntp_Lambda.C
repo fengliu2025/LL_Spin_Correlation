@@ -3,41 +3,97 @@
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
-
+#include "new_Tree.h"
 void ntp_Lambda::Loop()
 {
-//   In a ROOT session, you can do:
-//      root> .L ntp_Lambda.C
-//      root> ntp_Lambda t
-//      root> t.GetEntry(12); // Fill t data members with entry number 12
-//      root> t.Show();       // Show values of entry 12
-//      root> t.Show(16);     // Read and show values of entry 16
-//      root> t.Loop();       // Loop on all entries
-//
+   //------------------------------------------ENTER FILE LOOP-----------------------------------
+   for(int ifile = 0; ifile < InPutFileList.size(); ifile ++){
+         //Open the .root file 
+         TFile *fin = TFile::Open(InPutFileList[ifile].c_str(),"READ"); 
+         if(!fin){
+            std::cout<<"Can not opne the file:"<<InPutFileList[ifile]<<std::endl;
+            std::cout<<"Skip this root file"<<std::endl;
+            continue;
+         }
 
-//     This is the loop skeleton where:
-//    jentry is the global entry number in the chain
-//    ientry is the entry number in the current Tree
-//  Note that the argument to GetEntry must be:
-//    jentry for TChain::GetEntry
-//    ientry for TTree::GetEntry and TBranch::GetEntry
-//
-//       To read only selected branches, Insert statements like:
-// METHOD1:
-//    fChain->SetBranchStatus("*",0);  // disable all branches
-//    fChain->SetBranchStatus("branchname",1);  // activate branchname
-// METHOD2: replace line
-//    fChain->GetEntry(jentry);       //read all branches
-//by  b_branchname->GetEntry(ientry); //read only this branch
-   if (fChain == 0) return;
+         TTree *Tree = (TTree *)fin->Get("ntp_Lambda"); 
+         if(!TTree){
+            std::cout<<"Can not open the TTree,skip this file"<<std::endl;
+            continue;
+         }
 
-   Long64_t nentries = fChain->GetEntriesFast();
+         //Initialize the TTree 
+         Init(Tree);
+         int current_eventId = -1;
+         int current_Nlambda = 0;
 
-   Long64_t nbytes = 0, nb = 0;
-   for (Long64_t jentry=0; jentry<nentries;jentry++) {
-      Long64_t ientry = LoadTree(jentry);
-      if (ientry < 0) break;
-      nb = fChain->GetEntry(jentry);   nbytes += nb;
-      // if (Cut(ientry) < 0) continue;
+
+         new_Tree *newTree;
+         newTree->MakeNewTree();
+         newTree->ResetTree();
+
+
+         Long64_t NEntries =  fChain->GetEntries();
+         fChain->GetEntry(0);
+         //-------------------------------------ENTER ENTRY LOOP--------------------------------
+         for(int ientry=0; ientry < NEntries; ientry++ ){
+           
+
+            newTree->p1_InEventID[current_Nlambda] = p1_InEventID;
+            newTree->p1_pt[current_Nlambda]        = p1_pt; 
+            newTree->p1_phi[current_Nlambda]       = p1_phi;
+            newTree->p1_eta[current_Nlambda]       = p1_eta; 
+            newTree->p1_dca[current_Nlambda]       = p1_dca;
+            newTree->p1_ch[current_Nlambda]        = p1_ch;
+            newTree->p1_hasTOFinfo[current_Nlambda]= p1_hasTOFinfo;
+
+            newTree->p2_InEventID[current_Nlambda] = p2_InEventID;
+            newTree->p2_pt[current_Nlambda]        = p2_pt;
+            newTree->p2_phi[current_Nlambda]       = p2_phi;
+            newTree->p2_eta[current_Nlambda]       = p2_eta;
+            newTree->p2_dca[current_Nlambda]       = p2_dca;
+            newTree->p2_hasTOFinfo[current_Nlambda]= p2_hasTOFinfo;
+
+            newTree->pair_charge[current_Nlambda]  = pair_charge;
+            newTree->pair_DCAdaughters[current_Nlambda]=pair_DCAdaughters;
+            newTree->pair_theta[current_Nlambda]   = pair_theta;
+            newTree->pair_decayL[current_Nlambda]  = pair_decayL;
+            newTree->pair_phi[current_Nlambda]     = pair_phi;
+            newTree->pair_eta[current_Nlambda]     = pair_eta;
+            newTree->pair_pt[current_Nlambda]      = pair_pt;
+            newTree->pair_mass[current_Nlambda]    = pair_mass;
+       
+  
+            current_Nlambda++;
+            if(ientry==NEntries-1){
+               newTree->NLambda = current_Nlambda;
+               newTree->Fill();
+               break;
+            }
+            fChain->GetEntry(ientry+1);
+            if(eventId!=current_eventId){
+               newTree->NLambda = current_Nlambda;
+               newTree->Fill();
+
+               //prepare for next events 
+               current_eventId = eventId;
+               current_Nlambda =0;
+
+               newTree->eventId = eventId;
+               newTree->Vz      = Vz;
+            }
+
+
+         }
+         //-------------------------------------END ENTRY LOOP--------------------------------
+
+         //Write to OutPutFile 
+         fin->Close();
+         delete fin;
+         newTree->WriteTree(OutPutFileList[ifile].c_str());
+         
+
+
    }
+   //------------------------------------------END FILE LOOP  -----------------------------------
 }

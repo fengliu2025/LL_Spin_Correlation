@@ -16,6 +16,8 @@
 
 class ntp_Lambda {
 public :
+   std::vector<std::string> InPutFileList;
+   std::vector<std::string> OutPutFileList; 
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
 
@@ -85,37 +87,20 @@ public :
 
    ntp_Lambda(TTree *tree=0);
    virtual ~ntp_Lambda();
-   virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
    virtual void     Loop();
-   virtual Bool_t   Notify();
-   virtual void     Show(Long64_t entry = -1);
 };
 
 #endif
 
 #ifdef ntp_Lambda_cxx
-ntp_Lambda::ntp_Lambda(TTree *tree) : fChain(0) 
-{
-// if parameter tree is not specified (or zero), connect the file
-// used to generate this class and read the Tree.
-   if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("output_1.root");
-      if (!f || !f->IsOpen()) {
-         f = new TFile("output_1.root");
-      }
-      f->GetObject("ntp_Lambda",tree);
 
-   }
-   Init(tree);
-}
 
 ntp_Lambda::~ntp_Lambda()
 {
-   if (!fChain) return;
-   delete fChain->GetCurrentFile();
+  
 }
 
 Int_t ntp_Lambda::GetEntry(Long64_t entry)
@@ -185,29 +170,7 @@ void ntp_Lambda::Init(TTree *tree)
    Notify();
 }
 
-Bool_t ntp_Lambda::Notify()
-{
-   // The Notify() function is called when a new file is opened. This
-   // can be either for a new TTree in a TChain or when when a new TTree
-   // is started when using PROOF. It is normally not necessary to make changes
-   // to the generated code, but the routine can be extended by the
-   // user if needed. The return value is currently not used.
 
-   return kTRUE;
-}
 
-void ntp_Lambda::Show(Long64_t entry)
-{
-// Print contents of entry.
-// If entry is not specified, print current entry
-   if (!fChain) return;
-   fChain->Show(entry);
-}
-Int_t ntp_Lambda::Cut(Long64_t entry)
-{
-// This function may be called from Loop.
-// returns  1 if entry is accepted.
-// returns -1 otherwise.
-   return 1;
-}
+
 #endif // #ifdef ntp_Lambda_cxx
